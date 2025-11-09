@@ -7,6 +7,31 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## About this Starter Pack
+<div style="background-color: #f6f8fa; padding: 10px; border-radius: 5px;">
+This is a starter pack for <strong>Laravel tailored for educational purposes</strong>. 
+
+It is aimed at helping students and beginners to quickly set up a Laravel development environment that allows for 
+learning the basics without the need to configure everything from scratch.
+</div>
+
+### Changes from the original Laravel repository
+It provides a pre-configured environment with some opinionated settings and packages for the educational context. 
+Customisation was done based on Laravel version 12.x. (12.37.0 on November 9th, 2025).
+
+- Added **barryvdh/laravel-debugbar** for debug info in the browser
+- Altered **.env.example** for local development (SQLite database, debug mode on, cache and session set to file)
+- Added **roave/security-advisories** to prevent installation of packages with known security issues
+- Used **laravel/breeze** for authentication scaffolding with Blade templates (but moved all of the component views to a `components.breeze` subfolder for better organization)
+- Replaced vite and related front-end dependencies by **CDN includes of Tailwind CSS and Alpine JS** to keep things simple
+- Replaced PHP Unit by **Pest PHP** for testing, kept basic example tests
+- Some other small tweaks in configuration files, routes, controller, and view organisation to better reflect the educational purpose (rigid structure)
+
+<div style="background-color: #f6f8fa; padding: 10px; border-radius: 5px;">
+Everything that follows below (and the shields in the header) are part of the original Laravel README.md file.
+</div>
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
