@@ -14,9 +14,9 @@
             @csrf
 
             <div>
-                <x-primary-button>
+                <x-breeze.primary-button>
                     {{ __('Resend Verification Email') }}
-                </x-primary-button>
+                </x-breeze.primary-button>
             </div>
         </form>
 
