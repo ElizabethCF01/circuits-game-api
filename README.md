@@ -1,4 +1,11 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center" style="font-size: 24px; margin-bottom: -25px; color: #EF3B2D;">
+    <strong>Educational<br/> Starter Pack<br/></strong><span style="color:gray">for</span>
+</p>
+<p align="center">
+    <a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a>
+</p>
+
+
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
@@ -6,6 +13,8 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+
+---
 
 ## About this Starter Pack
 <div style="background-color: #f6f8fa; padding: 10px; border-radius: 5px;">
@@ -27,11 +36,9 @@ Customisation was done based on Laravel version 12.x. (12.37.0 on November 9th, 
 - Replaced PHP Unit by **Pest PHP** for testing, kept basic example tests
 - Some other small tweaks in configuration files, routes, controller, and view organisation to better reflect the educational purpose (rigid structure)
 
-<div style="background-color: #f6f8fa; padding: 10px; border-radius: 5px;">
 Everything that follows below (and the shields in the header) are part of the original Laravel README.md file.
-</div>
 
-
+---
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
