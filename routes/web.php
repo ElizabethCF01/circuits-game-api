@@ -14,6 +14,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [App\Http\Controllers\Userzone\ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [App\Http\Controllers\Userzone\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [App\Http\Controllers\Userzone\ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('tiles', App\Http\Controllers\TileController::class);
 });
 
 require __DIR__.'/auth.php';
