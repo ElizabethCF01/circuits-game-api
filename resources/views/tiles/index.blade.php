@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Tiles
             </h2>
-            <a href="{{ route('tiles.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <a href="{{ route('admin.tiles.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Create New Tile
             </a>
         </div>
@@ -38,9 +38,9 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $tile->type }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $tile->image ?? 'N/A' }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="{{ route('tiles.show', $tile) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                                                <a href="{{ route('tiles.edit', $tile) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                                <form action="{{ route('tiles.destroy', $tile) }}" method="POST" class="inline-block">
+                                                <a href="{{ route('admin.tiles.show', $tile) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
+                                                <a href="{{ route('admin.tiles.edit', $tile) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                                <form action="{{ route('admin.tiles.destroy', $tile) }}" method="POST" class="inline-block">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this tile?')">Delete</button>
@@ -56,7 +56,7 @@
                             {{ $tiles->links() }}
                         </div>
                     @else
-                        <p class="text-gray-500">No tiles available. <a href="{{ route('tiles.create') }}" class="text-blue-600 hover:text-blue-900">Create the first one</a></p>
+                        <p class="text-gray-500">No tiles available. <a href="{{ route('admin.tiles.create') }}" class="text-blue-600 hover:text-blue-900">Create the first one</a></p>
                     @endif
                 </div>
             </div>
