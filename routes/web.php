@@ -16,8 +16,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [App\Http\Controllers\Userzone\ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('tiles', App\Http\Controllers\TileController::class);
+    Route::resource('players', App\Http\Controllers\PlayerController::class);
 });
 
 require __DIR__.'/auth.php';
