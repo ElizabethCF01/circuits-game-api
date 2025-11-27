@@ -67,8 +67,8 @@
                     </div>
 
                     <div class="mb-4 mt-6">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Tiles:</h3>
-                        <pre class="bg-gray-100 p-4 rounded overflow-x-auto text-sm">{{ json_encode($level->tiles, JSON_PRETTY_PRINT) }}</pre>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Grid Visualization:</h3>
+                        <div id="gridContainer" class="inline-block border-2 border-gray-400 p-2 bg-gray-100"></div>
                     </div>
 
                     <div class="mb-4">
@@ -100,4 +100,39 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const gridData = @json($level->tiles);
+        const width = {{ $level->grid_width }};
+        const height = {{ $level->grid_height }};
+
+        const tileColors = {
+            'empty': '#e5e7eb',
+            'circuit': '#93c5fd',
+            'obstacle': '#fca5a5'
+        };
+
+        function renderGrid() {
+            const container = document.getElementById('gridContainer');
+
+            container.innerHTML = '';
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = `repeat(${width}, 40px)`;
+            container.style.gap = '2px';
+
+            for (let i = 0; i < width * height; i++) {
+                const tile = document.createElement('div');
+                const tileType = gridData[i]?.type || 'empty';
+
+                tile.style.width = '40px';
+                tile.style.height = '40px';
+                tile.style.backgroundColor = tileColors[tileType];
+                tile.style.border = '1px solid #9ca3af';
+
+                container.appendChild(tile);
+            }
+        }
+
+        renderGrid();
+    </script>
 </x-app-layout>

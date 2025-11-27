@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.levels.store') }}" method="POST">
+                    <form action="{{ route('admin.levels.store') }}" method="POST" id="levelForm">
                         @csrf
 
                         <div class="grid grid-cols-2 gap-4">
@@ -39,13 +39,13 @@
                         <div class="grid grid-cols-4 gap-4">
                             <div class="mb-4">
                                 <x-breeze.input-label for="grid_width" value="Grid Width" />
-                                <x-breeze.text-input id="grid_width" class="block mt-1 w-full" type="number" name="grid_width" :value="old('grid_width', 5)" min="1" required />
+                                <x-breeze.text-input id="grid_width" class="block mt-1 w-full" type="number" name="grid_width" value="{{ old('grid_width', 5) }}" min="1" max="20" required />
                                 <x-breeze.input-error :messages="$errors->get('grid_width')" class="mt-2" />
                             </div>
 
                             <div class="mb-4">
                                 <x-breeze.input-label for="grid_height" value="Grid Height" />
-                                <x-breeze.text-input id="grid_height" class="block mt-1 w-full" type="number" name="grid_height" :value="old('grid_height', 5)" min="1" required />
+                                <x-breeze.text-input id="grid_height" class="block mt-1 w-full" type="number" name="grid_height" value="{{ old('grid_height', 5) }}" min="1" max="20" required />
                                 <x-breeze.input-error :messages="$errors->get('grid_height')" class="mt-2" />
                             </div>
 
@@ -76,12 +76,26 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <x-breeze.input-label for="tiles" value="Tiles (JSON)" />
-                            <textarea id="tiles" name="tiles" rows="6" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm font-mono text-sm" required>{{ old('tiles', '[]') }}</textarea>
-                            <x-breeze.input-error :messages="$errors->get('tiles')" class="mt-2" />
-                            <p class="mt-1 text-sm text-gray-500">Format: [{"type": "obstacle", "tile_id": 1}, ...]</p>
+                        <div class="mb-6">
+                            <x-breeze.input-label value="Grid Editor" />
+                            <p class="text-sm text-gray-600 mb-3">Click on tiles to change their type. Update grid dimensions above to resize.</p>
+
+                            <div class="mb-3 flex gap-2">
+                                <button type="button" onclick="setCurrentTileType('empty')" class="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded" id="btn-empty">
+                                    Empty
+                                </button>
+                                <button type="button" onclick="setCurrentTileType('circuit')" class="px-3 py-2 bg-blue-200 hover:bg-blue-300 rounded" id="btn-circuit">
+                                    Circuit
+                                </button>
+                                <button type="button" onclick="setCurrentTileType('obstacle')" class="px-3 py-2 bg-red-200 hover:bg-red-300 rounded" id="btn-obstacle">
+                                    Obstacle
+                                </button>
+                            </div>
+
+                            <div id="gridContainer" class="inline-block border-2 border-gray-400 p-2 bg-gray-100"></div>
                         </div>
+
+                        <input type="hidden" id="tiles" name="tiles" value="[]" required />
 
                         <div class="flex items-center justify-end mt-4">
                             <a href="{{ route('admin.levels.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-3">
@@ -96,4 +110,72 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let currentTileType = 'empty';
+        let gridData = [];
+
+        const tileColors = {
+            'empty': '#e5e7eb',
+            'circuit': '#93c5fd',
+            'obstacle': '#fca5a5'
+        };
+
+        function setCurrentTileType(type) {
+            currentTileType = type;
+            document.querySelectorAll('[id^="btn-"]').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-gray-900');
+            });
+            document.getElementById('btn-' + type).classList.add('ring-2', 'ring-gray-900');
+        }
+
+        function createGrid() {
+            const width = parseInt(document.getElementById('grid_width').value) || 5;
+            const height = parseInt(document.getElementById('grid_height').value) || 5;
+            const container = document.getElementById('gridContainer');
+
+            gridData = [];
+            container.innerHTML = '';
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = `repeat(${width}, 40px)`;
+            container.style.gap = '2px';
+
+            for (let i = 0; i < width * height; i++) {
+                const tile = document.createElement('div');
+                tile.style.width = '40px';
+                tile.style.height = '40px';
+                tile.style.backgroundColor = tileColors['empty'];
+                tile.style.border = '1px solid #9ca3af';
+                tile.style.cursor = 'pointer';
+                tile.dataset.index = i;
+                tile.dataset.type = 'empty';
+
+                tile.addEventListener('click', function() {
+                    this.dataset.type = currentTileType;
+                    this.style.backgroundColor = tileColors[currentTileType];
+                    updateTilesData();
+                });
+
+                container.appendChild(tile);
+                gridData.push({type: 'empty', tile_id: 1});
+            }
+
+            updateTilesData();
+        }
+
+        function updateTilesData() {
+            const tiles = document.querySelectorAll('#gridContainer div');
+            gridData = Array.from(tiles).map(tile => ({
+                type: tile.dataset.type,
+                tile_id: 1
+            }));
+            document.getElementById('tiles').value = JSON.stringify(gridData);
+        }
+
+        document.getElementById('grid_width').addEventListener('change', createGrid);
+        document.getElementById('grid_height').addEventListener('change', createGrid);
+
+        setCurrentTileType('empty');
+        createGrid();
+    </script>
 </x-app-layout>
