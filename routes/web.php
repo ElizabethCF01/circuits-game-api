@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('tiles', App\Http\Controllers\TileController::class);
     Route::resource('players', App\Http\Controllers\PlayerController::class);
+    Route::resource('levels', App\Http\Controllers\LevelController::class);
 });
 
 require __DIR__.'/auth.php';
