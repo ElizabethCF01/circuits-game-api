@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Level;
 use App\Models\Player;
 use App\Models\Tile;
 use App\Models\User;
@@ -25,5 +26,7 @@ class DatabaseSeeder extends Seeder
         Player::factory(8)->create();
 
         Tile::factory(20)->create();
+
+        Level::factory(10)->create();
     }
 }
