@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
+            TileSeeder::class,
         ]);
 
         User::factory()->create([
@@ -25,8 +26,6 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
 
         Player::factory(8)->create();
-
-        Tile::factory(20)->create();
 
         Level::factory(10)->create();
 
