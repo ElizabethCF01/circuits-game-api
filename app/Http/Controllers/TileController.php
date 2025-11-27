@@ -68,7 +68,7 @@ class TileController extends Controller
     {
         $tile->delete();
 
-        return redirect()->route('tiles.index')
+        return redirect()->route('admin.tiles.index')
             ->with('success', 'Tile deleted successfully.');
     }
 }
