@@ -35,7 +35,7 @@ class PlayerController extends Controller
 
     public function show(Player $player)
     {
-        $player->load('user');
+        $player->load(['user', 'scores.level']);
         return view('players.show', compact('player'));
     }
 
