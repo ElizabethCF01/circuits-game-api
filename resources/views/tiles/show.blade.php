@@ -21,7 +21,11 @@
 
                     <div class="mb-4">
                         <h3 class="text-lg font-semibold text-gray-700">Image:</h3>
-                        <p class="text-gray-900">{{ $tile->image ?? 'N/A' }}</p>
+                        @if($tile->getFirstMediaUrl('images'))
+                            <img src="{{ $tile->getFirstMediaUrl('images') }}" alt="{{ $tile->type }}" class="w-48 h-48 object-cover rounded-lg mt-2">
+                        @else
+                            <p class="text-gray-500">No image uploaded</p>
+                        @endif
                     </div>
 
                     <div class="mb-4">

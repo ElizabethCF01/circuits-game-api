@@ -23,12 +23,16 @@ class TileController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|string|max:255',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        $tile = Tile::create($validated);
+        $tile = Tile::create(['type' => $validated['type']]);
 
-        return redirect()->route('tiles.index')
+        if ($request->hasFile('image')) {
+            $tile->addMedia($request->file('image'))->toMediaCollection('images');
+        }
+
+        return redirect()->route('admin.tiles.index')
             ->with('success', 'Tile created successfully.');
     }
 
@@ -46,12 +50,17 @@ class TileController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|string|max:255',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        $tile->update($validated);
+        $tile->update(['type' => $validated['type']]);
 
-        return redirect()->route('tiles.index')
+        if ($request->hasFile('image')) {
+            $tile->clearMediaCollection('images');
+            $tile->addMedia($request->file('image'))->toMediaCollection('images');
+        }
+
+        return redirect()->route('admin.tiles.index')
             ->with('success', 'Tile updated successfully.');
     }
 

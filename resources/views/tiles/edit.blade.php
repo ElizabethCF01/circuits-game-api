@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.tiles.update', $tile) }}" method="POST">
+                    <form action="{{ route('admin.tiles.update', $tile) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -20,8 +20,17 @@
                         </div>
 
                         <div class="mb-4">
-                            <x-breeze.input-label for="image" value="Image (URL or path)" />
-                            <x-breeze.text-input id="image" class="block mt-1 w-full" type="text" name="image" :value="old('image', $tile->image)" />
+                            <x-breeze.input-label for="image" value="Image" />
+
+                            @if($tile->getFirstMediaUrl('images'))
+                                <div class="mb-2">
+                                    <img src="{{ $tile->getFirstMediaUrl('images') }}" alt="Current image" class="w-32 h-32 object-cover rounded">
+                                    <p class="text-sm text-gray-500 mt-1">Current image</p>
+                                </div>
+                            @endif
+
+                            <input id="image" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="file" name="image" accept="image/*" />
+                            <p class="mt-1 text-sm text-gray-500">Max size: 2MB. Leave empty to keep current image.</p>
                             <x-breeze.input-error :messages="$errors->get('image')" class="mt-2" />
                         </div>
 

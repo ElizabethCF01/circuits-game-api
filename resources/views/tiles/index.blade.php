@@ -36,7 +36,13 @@
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $tile->id }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $tile->type }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $tile->image ?? 'N/A' }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                @if($tile->getFirstMediaUrl('images'))
+                                                    <img src="{{ $tile->getFirstMediaUrl('images') }}" alt="{{ $tile->type }}" class="w-16 h-16 object-cover rounded">
+                                                @else
+                                                    <span class="text-gray-400">No image</span>
+                                                @endif
+                                            </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <a href="{{ route('admin.tiles.show', $tile) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
                                                 <a href="{{ route('admin.tiles.edit', $tile) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>

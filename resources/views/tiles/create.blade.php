@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.tiles.store') }}" method="POST">
+                    <form action="{{ route('admin.tiles.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-4">
@@ -19,8 +19,9 @@
                         </div>
 
                         <div class="mb-4">
-                            <x-breeze.input-label for="image" value="Image (URL or path)" />
-                            <x-breeze.text-input id="image" class="block mt-1 w-full" type="text" name="image" :value="old('image')" />
+                            <x-breeze.input-label for="image" value="Image" />
+                            <input id="image" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="file" name="image" accept="image/*" />
+                            <p class="mt-1 text-sm text-gray-500">Max size: 2MB</p>
                             <x-breeze.input-error :messages="$errors->get('image')" class="mt-2" />
                         </div>
 
