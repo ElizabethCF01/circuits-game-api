@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-breeze.application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <img src="{{ asset('logo.png') }}" alt="Logo" class="block h-10 w-auto">
                     </a>
                 </div>
 
@@ -15,6 +15,20 @@
                     <x-breeze.nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-breeze.nav-link>
+
+                    @if(Auth::user()->is_admin)
+                        <x-breeze.nav-link :href="route('admin.levels.index')" :active="request()->routeIs('admin.levels.*')">
+                            {{ __('Levels') }}
+                        </x-breeze.nav-link>
+
+                        <x-breeze.nav-link :href="route('admin.tiles.index')" :active="request()->routeIs('admin.tiles.*')">
+                            {{ __('Tiles') }}
+                        </x-breeze.nav-link>
+
+                        <x-breeze.nav-link :href="route('admin.players.index')" :active="request()->routeIs('admin.players.*')">
+                            {{ __('Players') }}
+                        </x-breeze.nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -70,6 +84,20 @@
             <x-breeze.responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-breeze.responsive-nav-link>
+
+            @if(Auth::user()->is_admin)
+                <x-breeze.responsive-nav-link :href="route('admin.levels.index')" :active="request()->routeIs('admin.levels.*')">
+                    {{ __('Levels') }}
+                </x-breeze.responsive-nav-link>
+
+                <x-breeze.responsive-nav-link :href="route('admin.tiles.index')" :active="request()->routeIs('admin.tiles.*')">
+                    {{ __('Tiles') }}
+                </x-breeze.responsive-nav-link>
+
+                <x-breeze.responsive-nav-link :href="route('admin.players.index')" :active="request()->routeIs('admin.players.*')">
+                    {{ __('Players') }}
+                </x-breeze.responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
