@@ -7,21 +7,59 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-2">Welcome, {{ Auth::user()->name }}!</h3>
-                    <p class="text-gray-600 mb-4">{{ __("You're logged in!") }}</p>
-                    <a href="https://elizabethcf01.github.io/circuits-web-game/" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Play the Circuits Game
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                        </svg>
-                    </a>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Welcome Card -->
+                <div class="md:col-span-2 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <h3 class="text-lg font-semibold mb-2">Welcome, {{ Auth::user()->name }}!</h3>
+                        <p class="text-gray-600 mb-4">{{ __("You're logged in!") }}</p>
+                        <a href="https://elizabethcf01.github.io/circuits-web-game/" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Play the Circuits Game
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
+
+                <!-- Player Profile Card -->
+                @if(Auth::user()->player)
+                    <div class="bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-white">
+                            <div class="flex flex-col items-center">
+                                <img src="https://robohash.org/{{ Auth::user()->email }}.png?size=200x200"
+                                     alt="{{ Auth::user()->player->nickname }}"
+                                     class="w-20 h-20 rounded-lg border-3 border-white mb-3">
+                                <h4 class="text-lg font-bold mb-1">{{ Auth::user()->player->nickname }}</h4>
+                                <div class="bg-white/20 px-3 py-1 rounded-full mb-3">
+                                    <span class="text-sm font-semibold">{{ Auth::user()->player->xp }} XP</span>
+                                </div>
+                                <a href="{{ route('userzone.player.show') }}" class="text-white hover:text-gray-200 text-sm font-medium underline">
+                                    View Profile →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="bg-gradient-to-br from-green-500 to-teal-600 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-white">
+                            <div class="flex flex-col items-center text-center">
+                                <svg class="w-16 h-16 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                                </svg>
+                                <h4 class="text-lg font-bold mb-2">Create Your Player</h4>
+                                <p class="text-sm mb-3 text-white/90">Start your journey by creating a player profile!</p>
+                                <a href="{{ route('userzone.player.create') }}" class="bg-white text-green-600 px-4 py-2 rounded-md hover:bg-gray-100 font-medium text-sm">
+                                    Create Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             @if(Auth::user()->is_admin)
