@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             $table->string('nickname')->unique();
             $table->integer('xp')->default(0);
             $table->timestamps();
