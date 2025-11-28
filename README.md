@@ -1,91 +1,169 @@
-<p align="center" style="font-size: 24px; margin-bottom: -25px; color: #EF3B2D;">
-    <strong>Educational<br/> Starter Pack<br/></strong><span style="color:gray">for</span>
-</p>
-<p align="center">
-    <a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a>
-</p>
+# Circuits API
 
+Backend API for Circuits, a grid-based programming puzzle game designed to teach programming logic through interactive challenges.
 
+## About the Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is the **API and administration backend** for Circuits, an educational game where players control a robot navigating through circuit boards. This API handles all game logic, level creation, player management, and scoring.
 
----
+The API provides:
+- **Level Management**: Create, edit, and manage puzzle levels with configurable grids
+- **Player Profiles**: User authentication and player profile management
+- **Scoring System**: Track player achievements and XP
+- **Admin Panel**: Web-based administration interface for game content management
 
-## About this Starter Pack
-<div style="background-color: #f6f8fa; padding: 10px; border-radius: 5px;">
-This is a starter pack for <strong>Laravel tailored for educational purposes</strong>. 
+### API Features
 
-It is aimed at helping students and beginners to quickly set up a Laravel development environment that allows for 
-learning the basics without the need to configure everything from scratch.
-</div>
+-   **RESTful Endpoints**: Clean API design for game client integration
+-   **Player Management**: User authentication, player profiles with nickname and XP tracking
+-   **Level CRUD Operations**: Create, read, update, and delete game levels
+-   **Difficulty System**: Support for multiple difficulty levels (easy, medium, hard)
+-   **Score Tracking**: Record player achievements with XP calculation based on efficiency
+-   **Admin Interface**: Web-based UI for content management and moderation
 
-### Changes from the original Laravel repository
-It provides a pre-configured environment with some opinionated settings and packages for the educational context. 
-Customisation was done based on Laravel version 12.x. (12.37.0 on November 9th, 2025).
+### Database Schema
 
-- Added **barryvdh/laravel-debugbar** for debug info in the browser
-- Altered **.env.example** for local development (SQLite database, debug mode on, cache and session set to file)
-- Added **roave/security-advisories** to prevent installation of packages with known security issues
-- Used **laravel/breeze** for authentication scaffolding with Blade templates (but moved all of the component views to a `components.breeze` subfolder for better organization)
-- Replaced vite and related front-end dependencies by **CDN includes of Tailwind CSS and Alpine JS** to keep things simple
-- Replaced PHP Unit by **Pest PHP** for testing, kept basic example tests
-- Some other small tweaks in configuration files, routes, controller, and view organisation to better reflect the educational purpose (rigid structure)
+The API uses a relational database with the following main entities:
 
-Everything that follows below (and the shields in the header) are part of the original Laravel README.md file.
+-   **Users**: Authentication and account management (with admin capabilities)
+-   **Players**: Game profiles (one-to-one with users) tracking nickname and XP
+-   **Levels**: Puzzle configurations with grid layout, difficulty, and constraints
+-   **Tiles**: Building blocks for levels (empty, circuit, obstacle types)
+-   **Scores**: Player achievements on completed levels
+-   **Media**: File storage for level images and assets (via Spatie Media Library)
 
----
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This project is built using the [Laravel Educational Starter Pack](https://github.com/ndeblauw/starterpack) and includes:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   **Laravel 12**: PHP framework
+-   **SQLite**: Lightweight database for development
+-   **Laravel Breeze**: Authentication scaffolding
+-   **Tailwind CSS**: Utility-first CSS framework (CDN)
+-   **Alpine.js**: Lightweight JavaScript framework (CDN)
+-   **Spatie Media Library**: Image and file management
+-   **Pest PHP**: Testing framework
+-   **Laravel Debugbar**: Development debugging tools
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installation
 
-## Learning Laravel
+### Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+-   PHP 8.3 or higher
+-   Composer
+-   Node.js and npm
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Setup
 
-## Laravel Sponsors
+1. Clone the repository:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone <your-repo-url>
+cd starterpack
+```
 
-### Premium Partners
+2. Run the setup script:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer setup
+```
 
-## Contributing
+This will:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+-   Install PHP dependencies
+-   Copy `.env.example` to `.env`
+-   Generate application key
+-   Run database migrations
+-   Install and build frontend assets
 
-## Code of Conduct
+3. Start the development server:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+composer dev
+```
 
-## Security Vulnerabilities
+This runs multiple services concurrently:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+-   Laravel development server (localhost:8000)
+-   Queue worker
+-   Log viewer (Pail)
+-   Vite dev server
 
-## License
+## Usage
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### For Players
+
+1. Register a new account
+2. Create your player profile with a unique nickname
+3. Browse available levels
+4. Solve puzzles by writing command sequences
+5. Earn XP and track your progress
+
+### For Admins
+
+1. Access the admin panel at `/admin`
+2. Manage tiles (game elements)
+3. Create and edit levels
+4. View all player profiles
+
+## Development
+
+### Running Tests
+
+```bash
+composer test
+```
+
+### Code Quality
+
+The project uses Laravel Pint for code formatting:
+
+```bash
+./vendor/bin/pint
+```
+
+### Database
+
+View the current database schema:
+
+```bash
+php artisan db:show
+```
+
+Generate a new migration:
+
+```bash
+php artisan make:migration create_table_name
+```
+
+## Project Structure
+
+```
+app/
+├── Http/Controllers/
+│   ├── LevelController.php      # Admin level management
+│   ├── PlayerController.php     # Admin player management
+│   ├── TileController.php       # Admin tile management
+│   └── Userzone/
+│       ├── PlayerController.php # User player profile
+│       └── ProfileController.php # User account settings
+├── Models/
+│   ├── User.php
+│   ├── Player.php
+│   ├── Level.php
+│   ├── Tile.php
+│   └── Score.php
+database/
+├── migrations/                   # Database migrations
+└── seeders/                      # Database seeders
+resources/
+└── views/                        # Blade templates
+routes/
+├── web.php                       # Web routes
+└── auth.php                      # Authentication routes
+```
+
+## Acknowledgments
+
+-   Built with the [Laravel Educational Starter Pack](https://github.com/ndeblauw/starterpack)
+-   Powered by [Laravel Framework](https://laravel.com)
