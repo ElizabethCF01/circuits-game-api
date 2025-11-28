@@ -106,11 +106,9 @@
         const width = {{ $level->grid_width }};
         const height = {{ $level->grid_height }};
 
-        const tileColors = {
-            'empty': '#e5e7eb',
-            'circuit': '#93c5fd',
-            'obstacle': '#fca5a5'
-        };
+        const tileImages = @json($tiles->mapWithKeys(function($tile) {
+            return [$tile->type => $tile->getFirstMediaUrl('images')];
+        }));
 
         function renderGrid() {
             const container = document.getElementById('gridContainer');
@@ -123,11 +121,22 @@
             for (let i = 0; i < width * height; i++) {
                 const tile = document.createElement('div');
                 const tileType = gridData[i]?.type || 'empty';
+                const tileImageUrl = tileImages[tileType] || '';
 
                 tile.style.width = '40px';
                 tile.style.height = '40px';
-                tile.style.backgroundColor = tileColors[tileType];
                 tile.style.border = '1px solid #9ca3af';
+                tile.style.overflow = 'hidden';
+                tile.style.backgroundColor = '#e5e7eb';
+
+                if (tileImageUrl) {
+                    const img = document.createElement('img');
+                    img.src = tileImageUrl;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    tile.appendChild(img);
+                }
 
                 container.appendChild(tile);
             }
