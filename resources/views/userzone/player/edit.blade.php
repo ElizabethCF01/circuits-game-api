@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Player Profile') }}
+            Edit Player Profile
         </h2>
     </x-slot>
 
@@ -42,7 +42,7 @@
                                 Cancel
                             </a>
                             <x-breeze.primary-button>
-                                {{ __('Update Profile') }}
+                                Update Profile
                             </x-breeze.primary-button>
                         </div>
                     </form>

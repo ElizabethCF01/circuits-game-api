@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Player Profile') }}
+            Create Player Profile
         </h2>
     </x-slot>
 
@@ -18,7 +18,7 @@
                         @csrf
 
                         <div class="mb-6">
-                            <x-breeze.input-label for="nickname" :value="__('Nickname')" />
+                            <x-breeze.input-label for="nickname" :value="'Nickname'" />
                             <x-breeze.text-input id="nickname" class="block mt-1 w-full" type="text" name="nickname" :value="old('nickname')" required autofocus />
                             <x-breeze.input-error :messages="$errors->get('nickname')" class="mt-2" />
                             <p class="text-sm text-gray-500 mt-1">This will be your display name in the game</p>
@@ -43,7 +43,7 @@
                                 Cancel
                             </a>
                             <x-breeze.primary-button>
-                                {{ __('Create Player Profile') }}
+                              Create Player Profile
                             </x-breeze.primary-button>
                         </div>
                     </form>
