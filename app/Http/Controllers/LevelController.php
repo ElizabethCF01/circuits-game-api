@@ -15,7 +15,8 @@ class LevelController extends Controller
 
     public function create()
     {
-        return view('levels.create');
+        $tiles = \App\Models\Tile::all();
+        return view('levels.create', compact('tiles'));
     }
 
     public function store(Request $request)
@@ -44,12 +45,14 @@ class LevelController extends Controller
     public function show(Level $level)
     {
         $level->load('user');
-        return view('levels.show', compact('level'));
+        $tiles = \App\Models\Tile::all();
+        return view('levels.show', compact('level', 'tiles'));
     }
 
     public function edit(Level $level)
     {
-        return view('levels.edit', compact('level'));
+        $tiles = \App\Models\Tile::all();
+        return view('levels.edit', compact('level', 'tiles'));
     }
 
     public function update(Request $request, Level $level)
