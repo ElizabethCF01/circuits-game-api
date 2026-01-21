@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.levels.store') }}" method="POST" id="levelForm">
+                    <form action="{{ route('admin.levels.store') }}" method="POST">
                         @csrf
 
                         <div class="grid grid-cols-2 gap-4">
@@ -38,18 +38,6 @@
 
                         <div class="grid grid-cols-4 gap-4">
                             <div class="mb-4">
-                                <x-breeze.input-label for="grid_width" value="Grid Width" />
-                                <x-breeze.text-input id="grid_width" class="block mt-1 w-full" type="number" name="grid_width" value="{{ old('grid_width', 5) }}" min="1" max="20" required />
-                                <x-breeze.input-error :messages="$errors->get('grid_width')" class="mt-2" />
-                            </div>
-
-                            <div class="mb-4">
-                                <x-breeze.input-label for="grid_height" value="Grid Height" />
-                                <x-breeze.text-input id="grid_height" class="block mt-1 w-full" type="number" name="grid_height" value="{{ old('grid_height', 5) }}" min="1" max="20" required />
-                                <x-breeze.input-error :messages="$errors->get('grid_height')" class="mt-2" />
-                            </div>
-
-                            <div class="mb-4">
                                 <x-breeze.input-label for="start_x" value="Start X" />
                                 <x-breeze.text-input id="start_x" class="block mt-1 w-full" type="number" name="start_x" :value="old('start_x', 0)" min="0" required />
                                 <x-breeze.input-error :messages="$errors->get('start_x')" class="mt-2" />
@@ -60,9 +48,7 @@
                                 <x-breeze.text-input id="start_y" class="block mt-1 w-full" type="number" name="start_y" :value="old('start_y', 0)" min="0" required />
                                 <x-breeze.input-error :messages="$errors->get('start_y')" class="mt-2" />
                             </div>
-                        </div>
 
-                        <div class="grid grid-cols-2 gap-4">
                             <div class="mb-4">
                                 <x-breeze.input-label for="required_circuits" value="Required Circuits" />
                                 <x-breeze.text-input id="required_circuits" class="block mt-1 w-full" type="number" name="required_circuits" :value="old('required_circuits', 1)" min="0" required />
@@ -76,11 +62,16 @@
                             </div>
                         </div>
 
-                        <x-grid-editor
-                            :tiles="$tiles"
-                            :gridWidth="old('grid_width', 5)"
-                            :gridHeight="old('grid_height', 5)"
-                        />
+                        <div class="mb-4">
+                            <x-breeze.input-label value="Grid Editor" class="mb-2" />
+                            <x-breeze.input-error :messages="$errors->get('tiles')" class="mt-2" />
+
+                            <livewire:grid-editor
+                                :tiles="old('tiles') ? json_decode(old('tiles'), true) : []"
+                                :grid-width="old('grid_width', 5)"
+                                :grid-height="old('grid_height', 5)"
+                            />
+                        </div>
 
                         <div class="flex items-center justify-end mt-4">
                             <a href="{{ route('admin.levels.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-3">

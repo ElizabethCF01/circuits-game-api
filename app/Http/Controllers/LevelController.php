@@ -9,14 +9,12 @@ class LevelController extends Controller
 {
     public function index()
     {
-        $levels = Level::with('user')->paginate(10);
-        return view('levels.index', compact('levels'));
+        return view('levels.index');
     }
 
     public function create()
     {
-        $tiles = \App\Models\Tile::all();
-        return view('levels.create', compact('tiles'));
+        return view('levels.create');
     }
 
     public function store(Request $request)
@@ -51,8 +49,7 @@ class LevelController extends Controller
 
     public function edit(Level $level)
     {
-        $tiles = \App\Models\Tile::all();
-        return view('levels.edit', compact('level', 'tiles'));
+        return view('levels.edit', compact('level'));
     }
 
     public function update(Request $request, Level $level)
