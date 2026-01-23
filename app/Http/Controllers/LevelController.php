@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLevelRequest;
+use App\Http\Requests\UpdateLevelRequest;
 use App\Models\Level;
-use Illuminate\Http\Request;
 
 class LevelController extends Controller
 {
@@ -17,21 +18,9 @@ class LevelController extends Controller
         return view('levels.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreLevelRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'start_x' => 'required|integer|min:0',
-            'start_y' => 'required|integer|min:0',
-            'required_circuits' => 'required|integer|min:0',
-            'max_commands' => 'required|integer|min:1',
-            'difficulty' => 'required|in:easy,medium,hard',
-            'grid_width' => 'required|integer|min:1',
-            'grid_height' => 'required|integer|min:1',
-            'tiles' => 'required|json',
-        ]);
-
+        $validated = $request->validated();
         $validated['tiles'] = json_decode($validated['tiles'], true);
         $validated['user_id'] = auth()->id();
 
@@ -52,21 +41,9 @@ class LevelController extends Controller
         return view('levels.edit', compact('level'));
     }
 
-    public function update(Request $request, Level $level)
+    public function update(UpdateLevelRequest $request, Level $level)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'start_x' => 'required|integer|min:0',
-            'start_y' => 'required|integer|min:0',
-            'required_circuits' => 'required|integer|min:0',
-            'max_commands' => 'required|integer|min:1',
-            'difficulty' => 'required|in:easy,medium,hard',
-            'grid_width' => 'required|integer|min:1',
-            'grid_height' => 'required|integer|min:1',
-            'tiles' => 'required|json',
-        ]);
-
+        $validated = $request->validated();
         $validated['tiles'] = json_decode($validated['tiles'], true);
 
         $level->update($validated);
