@@ -36,29 +36,50 @@
                             <x-breeze.input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
-                        <div class="grid grid-cols-4 gap-4">
+                        <div class="grid grid-cols-3 gap-4" x-data="{ startX: {{ old('start_x', 0) }}, startY: {{ old('start_y', 0) }}, requiredCircuits: {{ old('required_circuits', 1) }} }">
                             <div class="mb-4">
                                 <x-breeze.input-label for="start_x" value="Start X" />
-                                <x-breeze.text-input id="start_x" class="block mt-1 w-full" type="number" name="start_x" :value="old('start_x', 0)" min="0" required />
+                                <x-breeze.text-input
+                                    id="start_x"
+                                    class="block mt-1 w-full"
+                                    type="number"
+                                    name="start_x"
+                                    x-model="startX"
+                                    @change="$dispatch('update-start-position', { x: parseInt(startX), y: parseInt(startY) })"
+                                    min="0"
+                                    required
+                                />
                                 <x-breeze.input-error :messages="$errors->get('start_x')" class="mt-2" />
                             </div>
 
                             <div class="mb-4">
                                 <x-breeze.input-label for="start_y" value="Start Y" />
-                                <x-breeze.text-input id="start_y" class="block mt-1 w-full" type="number" name="start_y" :value="old('start_y', 0)" min="0" required />
+                                <x-breeze.text-input
+                                    id="start_y"
+                                    class="block mt-1 w-full"
+                                    type="number"
+                                    name="start_y"
+                                    x-model="startY"
+                                    @change="$dispatch('update-start-position', { x: parseInt(startX), y: parseInt(startY) })"
+                                    min="0"
+                                    required
+                                />
                                 <x-breeze.input-error :messages="$errors->get('start_y')" class="mt-2" />
                             </div>
 
                             <div class="mb-4">
                                 <x-breeze.input-label for="required_circuits" value="Required Circuits" />
-                                <x-breeze.text-input id="required_circuits" class="block mt-1 w-full" type="number" name="required_circuits" :value="old('required_circuits', 1)" min="0" required />
+                                <x-breeze.text-input
+                                    id="required_circuits"
+                                    class="block mt-1 w-full"
+                                    type="number"
+                                    name="required_circuits"
+                                    x-model="requiredCircuits"
+                                    @change="$dispatch('update-required-circuits', { count: parseInt(requiredCircuits) })"
+                                    min="0"
+                                    required
+                                />
                                 <x-breeze.input-error :messages="$errors->get('required_circuits')" class="mt-2" />
-                            </div>
-
-                            <div class="mb-4">
-                                <x-breeze.input-label for="max_commands" value="Max Commands" />
-                                <x-breeze.text-input id="max_commands" class="block mt-1 w-full" type="number" name="max_commands" :value="old('max_commands', 10)" min="1" required />
-                                <x-breeze.input-error :messages="$errors->get('max_commands')" class="mt-2" />
                             </div>
                         </div>
 
@@ -70,6 +91,9 @@
                                 :tiles="old('tiles') ? json_decode(old('tiles'), true) : []"
                                 :grid-width="old('grid_width', 5)"
                                 :grid-height="old('grid_height', 5)"
+                                :start-x="old('start_x', 0)"
+                                :start-y="old('start_y', 0)"
+                                :required-circuits="old('required_circuits', 1)"
                             />
                         </div>
 

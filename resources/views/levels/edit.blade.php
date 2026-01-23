@@ -37,29 +37,50 @@
                             <x-breeze.input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
-                        <div class="grid grid-cols-4 gap-4">
+                        <div class="grid grid-cols-3 gap-4" x-data="{ startX: {{ old('start_x', $level->start_x) }}, startY: {{ old('start_y', $level->start_y) }}, requiredCircuits: {{ old('required_circuits', $level->required_circuits) }} }">
                             <div class="mb-4">
                                 <x-breeze.input-label for="start_x" value="Start X" />
-                                <x-breeze.text-input id="start_x" class="block mt-1 w-full" type="number" name="start_x" :value="old('start_x', $level->start_x)" min="0" required />
+                                <x-breeze.text-input
+                                    id="start_x"
+                                    class="block mt-1 w-full"
+                                    type="number"
+                                    name="start_x"
+                                    x-model="startX"
+                                    @change="$dispatch('update-start-position', { x: parseInt(startX), y: parseInt(startY) })"
+                                    min="0"
+                                    required
+                                />
                                 <x-breeze.input-error :messages="$errors->get('start_x')" class="mt-2" />
                             </div>
 
                             <div class="mb-4">
                                 <x-breeze.input-label for="start_y" value="Start Y" />
-                                <x-breeze.text-input id="start_y" class="block mt-1 w-full" type="number" name="start_y" :value="old('start_y', $level->start_y)" min="0" required />
+                                <x-breeze.text-input
+                                    id="start_y"
+                                    class="block mt-1 w-full"
+                                    type="number"
+                                    name="start_y"
+                                    x-model="startY"
+                                    @change="$dispatch('update-start-position', { x: parseInt(startX), y: parseInt(startY) })"
+                                    min="0"
+                                    required
+                                />
                                 <x-breeze.input-error :messages="$errors->get('start_y')" class="mt-2" />
                             </div>
 
                             <div class="mb-4">
                                 <x-breeze.input-label for="required_circuits" value="Required Circuits" />
-                                <x-breeze.text-input id="required_circuits" class="block mt-1 w-full" type="number" name="required_circuits" :value="old('required_circuits', $level->required_circuits)" min="0" required />
+                                <x-breeze.text-input
+                                    id="required_circuits"
+                                    class="block mt-1 w-full"
+                                    type="number"
+                                    name="required_circuits"
+                                    x-model="requiredCircuits"
+                                    @change="$dispatch('update-required-circuits', { count: parseInt(requiredCircuits) })"
+                                    min="0"
+                                    required
+                                />
                                 <x-breeze.input-error :messages="$errors->get('required_circuits')" class="mt-2" />
-                            </div>
-
-                            <div class="mb-4">
-                                <x-breeze.input-label for="max_commands" value="Max Commands" />
-                                <x-breeze.text-input id="max_commands" class="block mt-1 w-full" type="number" name="max_commands" :value="old('max_commands', $level->max_commands)" min="1" required />
-                                <x-breeze.input-error :messages="$errors->get('max_commands')" class="mt-2" />
                             </div>
                         </div>
 
@@ -71,6 +92,9 @@
                                 :tiles="old('tiles') ? json_decode(old('tiles'), true) : $level->tiles"
                                 :grid-width="old('grid_width', $level->grid_width)"
                                 :grid-height="old('grid_height', $level->grid_height)"
+                                :start-x="old('start_x', $level->start_x)"
+                                :start-y="old('start_y', $level->start_y)"
+                                :required-circuits="old('required_circuits', $level->required_circuits)"
                             />
                         </div>
 
