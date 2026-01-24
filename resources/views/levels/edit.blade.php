@@ -22,7 +22,7 @@
 
                             <div class="mb-4">
                                 <x-breeze.input-label for="difficulty" value="Difficulty" />
-                                <x-breeze.difficulty-selector class="mt-1" :value="old('difficulty', $level->difficulty)" />
+                                <x-breeze.difficulty-selector class="mt-1" :value="old('difficulty', $level->difficulty->value)" />
                                 <x-breeze.input-error :messages="$errors->get('difficulty')" class="mt-2" />
                             </div>
                         </div>

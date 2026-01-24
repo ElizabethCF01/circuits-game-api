@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\LevelValidationController;
 use App\Http\Controllers\Api\PlayerController;
+use App\Http\Controllers\Api\TileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,14 +32,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/player', [PlayerController::class, 'store']);
     Route::put('/player', [PlayerController::class, 'update']);
     Route::delete('/player', [PlayerController::class, 'destroy']);
+    Route::get('/player/progress', [PlayerController::class, 'progress']);
 });
 
 /*
 |--------------------------------------------------------------------------
-| Level Validation Routes
+| Level Routes
 |--------------------------------------------------------------------------
 */
 Route::prefix('levels')->group(function () {
+    // Public routes
+    Route::get('/', [LevelController::class, 'index']);
+    Route::get('/{level}', [LevelController::class, 'show']);
+
+    // Authenticated routes
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/{level}/complete', [LevelController::class, 'complete']);
+    });
+
+    // Validation routes (for level editor)
     Route::post('/validate', [LevelValidationController::class, 'validate']);
     Route::post('/reachability', [LevelValidationController::class, 'checkReachability']);
 });

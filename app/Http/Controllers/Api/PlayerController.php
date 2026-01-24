@@ -118,4 +118,42 @@ class PlayerController extends Controller
             'message' => 'Player deleted successfully',
         ]);
     }
+
+    /**
+     * Get the player's progress (completed levels and scores)
+     *
+     * GET /api/player/progress
+     */
+    public function progress(Request $request): JsonResponse
+    {
+        $player = $request->user()->player;
+
+        if (! $player) {
+            return response()->json([
+                'message' => 'Player not found',
+            ], 404);
+        }
+
+        $scores = $player->scores()
+            ->with('level:id,name,difficulty')
+            ->orderBy('completed_at', 'desc')
+            ->get()
+            ->map(fn($score) => [
+                'level_id' => $score->level_id,
+                'level_name' => $score->level->name,
+                'difficulty' => $score->level->difficulty->value,
+                'xp_earned' => $score->xp_earned,
+                'commands_used' => $score->commands_used,
+                'completed_at' => $score->completed_at,
+            ]);
+
+        return response()->json([
+            'player' => [
+                'nickname' => $player->nickname,
+                'total_xp' => $player->xp,
+                'levels_completed' => $scores->count(),
+            ],
+            'scores' => $scores,
+        ]);
+    }
 }

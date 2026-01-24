@@ -75,11 +75,11 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $level->user->name ?? 'Unknown' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if($level->difficulty === 'easy') bg-green-100 text-green-800
-                                    @elseif($level->difficulty === 'medium') bg-yellow-100 text-yellow-800
+                                    @if($level->difficulty->value === 'easy') bg-green-100 text-green-800
+                                    @elseif($level->difficulty->value === 'medium') bg-yellow-100 text-yellow-800
                                     @else bg-red-100 text-red-800
                                     @endif">
-                                    {{ ucfirst($level->difficulty) }}
+                                    {{ ucfirst($level->difficulty->value) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $level->grid_width }}x{{ $level->grid_height }}</td>

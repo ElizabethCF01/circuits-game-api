@@ -34,11 +34,11 @@
                             <div class="mb-4">
                                 <h3 class="text-lg font-semibold text-gray-700">Difficulty:</h3>
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if($level->difficulty === 'easy') bg-green-100 text-green-800
-                                    @elseif($level->difficulty === 'medium') bg-yellow-100 text-yellow-800
+                                    @if($level->difficulty->value === 'easy') bg-green-100 text-green-800
+                                    @elseif($level->difficulty->value === 'medium') bg-yellow-100 text-yellow-800
                                     @else bg-red-100 text-red-800
                                     @endif">
-                                    {{ ucfirst($level->difficulty) }}
+                                    {{ ucfirst($level->difficulty->value) }}
                                 </span>
                             </div>
                         </div>
