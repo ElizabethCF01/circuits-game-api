@@ -22,11 +22,7 @@
 
                             <div class="mb-4">
                                 <x-breeze.input-label for="difficulty" value="Difficulty" />
-                                <select id="difficulty" name="difficulty" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
-                                    <option value="easy" {{ old('difficulty', $level->difficulty) === 'easy' ? 'selected' : '' }}>Easy</option>
-                                    <option value="medium" {{ old('difficulty', $level->difficulty) === 'medium' ? 'selected' : '' }}>Medium</option>
-                                    <option value="hard" {{ old('difficulty', $level->difficulty) === 'hard' ? 'selected' : '' }}>Hard</option>
-                                </select>
+                                <x-breeze.difficulty-selector class="mt-1" :value="old('difficulty', $level->difficulty)" />
                                 <x-breeze.input-error :messages="$errors->get('difficulty')" class="mt-2" />
                             </div>
                         </div>
