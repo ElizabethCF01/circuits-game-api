@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Difficulty;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +25,7 @@ class Level extends Model
         'grid_width',
         'grid_height',
         'tiles',
+        'is_public',
     ];
 
     protected function casts(): array
@@ -36,6 +38,8 @@ class Level extends Model
             'grid_width' => 'integer',
             'grid_height' => 'integer',
             'tiles' => 'array',
+            'is_public' => 'boolean',
+            'difficulty' => Difficulty::class,
         ];
     }
 
