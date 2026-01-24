@@ -8,12 +8,32 @@ use App\Http\Requests\Api\UpdatePlayerRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Player
+ *
+ * APIs for managing player profiles
+ */
 class PlayerController extends Controller
 {
     /**
-     * Get the authenticated user's player
+     * Get player profile
      *
-     * GET /api/player
+     * Get the authenticated user's player profile.
+     *
+     * @authenticated
+     *
+     * @response {
+     *   "player": {
+     *     "id": 1,
+     *     "nickname": "CircuitMaster",
+     *     "xp": 150,
+     *     "created_at": "2024-01-15T10:30:00.000000Z",
+     *     "updated_at": "2024-01-15T10:30:00.000000Z"
+     *   }
+     * }
+     * @response 404 scenario="Player not found" {
+     *   "message": "Player not found"
+     * }
      */
     public function show(Request $request): JsonResponse
     {
@@ -37,9 +57,33 @@ class PlayerController extends Controller
     }
 
     /**
-     * Create a player for the authenticated user
+     * Create player profile
      *
-     * POST /api/player
+     * Create a new player profile for the authenticated user. Each user can only have one player.
+     *
+     * @authenticated
+     *
+     * @bodyParam nickname string required The player's nickname (unique, 3-20 characters). Example: CircuitMaster
+     *
+     * @response 201 {
+     *   "message": "Player created successfully",
+     *   "player": {
+     *     "id": 1,
+     *     "nickname": "CircuitMaster",
+     *     "xp": 0,
+     *     "created_at": "2024-01-15T10:30:00.000000Z",
+     *     "updated_at": "2024-01-15T10:30:00.000000Z"
+     *   }
+     * }
+     * @response 409 scenario="Player already exists" {
+     *   "message": "Player already exists"
+     * }
+     * @response 422 scenario="Validation error" {
+     *   "message": "The nickname has already been taken.",
+     *   "errors": {
+     *     "nickname": ["The nickname has already been taken."]
+     *   }
+     * }
      */
     public function store(StorePlayerRequest $request): JsonResponse
     {
@@ -67,9 +111,27 @@ class PlayerController extends Controller
     }
 
     /**
-     * Update the authenticated user's player
+     * Update player profile
      *
-     * PUT /api/player
+     * Update the authenticated user's player nickname.
+     *
+     * @authenticated
+     *
+     * @bodyParam nickname string required The new nickname (unique, 3-20 characters). Example: NewNickname
+     *
+     * @response {
+     *   "message": "Player updated successfully",
+     *   "player": {
+     *     "id": 1,
+     *     "nickname": "NewNickname",
+     *     "xp": 150,
+     *     "created_at": "2024-01-15T10:30:00.000000Z",
+     *     "updated_at": "2024-01-15T12:00:00.000000Z"
+     *   }
+     * }
+     * @response 404 scenario="Player not found" {
+     *   "message": "Player not found"
+     * }
      */
     public function update(UpdatePlayerRequest $request): JsonResponse
     {
@@ -98,9 +160,18 @@ class PlayerController extends Controller
     }
 
     /**
-     * Delete the authenticated user's player
+     * Delete player profile
      *
-     * DELETE /api/player
+     * Delete the authenticated user's player profile. This will also delete all associated scores.
+     *
+     * @authenticated
+     *
+     * @response {
+     *   "message": "Player deleted successfully"
+     * }
+     * @response 404 scenario="Player not found" {
+     *   "message": "Player not found"
+     * }
      */
     public function destroy(Request $request): JsonResponse
     {
@@ -120,9 +191,32 @@ class PlayerController extends Controller
     }
 
     /**
-     * Get the player's progress (completed levels and scores)
+     * Get player progress
      *
-     * GET /api/player/progress
+     * Get the player's progress including all completed levels and scores.
+     *
+     * @authenticated
+     *
+     * @response {
+     *   "player": {
+     *     "nickname": "CircuitMaster",
+     *     "total_xp": 150,
+     *     "levels_completed": 3
+     *   },
+     *   "scores": [
+     *     {
+     *       "level_id": 1,
+     *       "level_name": "Tutorial",
+     *       "difficulty": "easy",
+     *       "xp_earned": 25,
+     *       "commands_used": 8,
+     *       "completed_at": "2024-01-15T10:30:00.000000Z"
+     *     }
+     *   ]
+     * }
+     * @response 404 scenario="Player not found" {
+     *   "message": "Player not found"
+     * }
      */
     public function progress(Request $request): JsonResponse
     {
@@ -138,7 +232,7 @@ class PlayerController extends Controller
             ->with('level:id,name,difficulty')
             ->orderBy('completed_at', 'desc')
             ->get()
-            ->map(fn($score) => [
+            ->map(fn ($score) => [
                 'level_id' => $score->level_id,
                 'level_name' => $score->level->name,
                 'difficulty' => $score->level->difficulty->value,

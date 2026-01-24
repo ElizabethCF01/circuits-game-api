@@ -1,0 +1,276 @@
+name: Player
+description: |-
+
+  APIs for managing player profiles
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/player
+    metadata:
+      custom: []
+      groupName: Player
+      groupDescription: |-
+
+        APIs for managing player profiles
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get player profile'
+      description: "Get the authenticated user's player profile."
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer Bearer {YOUR_API_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "player": {
+              "id": 1,
+              "nickname": "CircuitMaster",
+              "xp": 150,
+              "created_at": "2024-01-15T10:30:00.000000Z",
+              "updated_at": "2024-01-15T10:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Player not found"
+          }
+        headers: []
+        description: 'Player not found'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/player
+    metadata:
+      custom: []
+      groupName: Player
+      groupDescription: |-
+
+        APIs for managing player profiles
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create player profile'
+      description: 'Create a new player profile for the authenticated user. Each user can only have one player.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer Bearer {YOUR_API_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      nickname:
+        custom: []
+        name: nickname
+        description: "The player's nickname (unique, 3-20 characters)."
+        required: true
+        example: CircuitMaster
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      nickname: CircuitMaster
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Player created successfully",
+            "player": {
+              "id": 1,
+              "nickname": "CircuitMaster",
+              "xp": 0,
+              "created_at": "2024-01-15T10:30:00.000000Z",
+              "updated_at": "2024-01-15T10:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 409
+        content: |-
+          {
+            "message": "Player already exists"
+          }
+        headers: []
+        description: 'Player already exists'
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The nickname has already been taken.",
+            "errors": {
+              "nickname": ["The nickname has already been taken."]
+            }
+          }
+        headers: []
+        description: 'Validation error'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: api/player
+    metadata:
+      custom: []
+      groupName: Player
+      groupDescription: |-
+
+        APIs for managing player profiles
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete player profile'
+      description: "Delete the authenticated user's player profile. This will also delete all associated scores."
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer Bearer {YOUR_API_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Player deleted successfully"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Player not found"
+          }
+        headers: []
+        description: 'Player not found'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/player/progress
+    metadata:
+      custom: []
+      groupName: Player
+      groupDescription: |-
+
+        APIs for managing player profiles
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get player progress'
+      description: "Get the player's progress including all completed levels and scores."
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer Bearer {YOUR_API_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "player": {
+              "nickname": "CircuitMaster",
+              "total_xp": 150,
+              "levels_completed": 3
+            },
+            "scores": [
+              {
+                "level_id": 1,
+                "level_name": "Tutorial",
+                "difficulty": "easy",
+                "xp_earned": 25,
+                "commands_used": 8,
+                "completed_at": "2024-01-15T10:30:00.000000Z"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Player not found"
+          }
+        headers: []
+        description: 'Player not found'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

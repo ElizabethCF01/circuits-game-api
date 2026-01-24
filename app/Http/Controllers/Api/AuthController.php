@@ -10,12 +10,41 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @group Authentication
+ *
+ * APIs for user authentication
+ */
 class AuthController extends Controller
 {
     /**
      * Register a new user
      *
-     * POST /api/auth/register
+     * Create a new user account and return an API token.
+     *
+     * @unauthenticated
+     *
+     * @bodyParam name string required The user's name. Example: John Doe
+     * @bodyParam email string required The user's email address. Example: john@example.com
+     * @bodyParam password string required The password (min 8 characters). Example: secretpassword
+     * @bodyParam password_confirmation string required Password confirmation. Example: secretpassword
+     *
+     * @response 201 {
+     *   "message": "User registered successfully",
+     *   "user": {
+     *     "id": 1,
+     *     "name": "John Doe",
+     *     "email": "john@example.com"
+     *   },
+     *   "token": "1|abc123...",
+     *   "token_type": "Bearer"
+     * }
+     * @response 422 scenario="Validation error" {
+     *   "message": "The email has already been taken.",
+     *   "errors": {
+     *     "email": ["The email has already been taken."]
+     *   }
+     * }
      */
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -40,9 +69,28 @@ class AuthController extends Controller
     }
 
     /**
-     * Login user and create token
+     * Login
      *
-     * POST /api/auth/login
+     * Authenticate a user and return an API token.
+     *
+     * @unauthenticated
+     *
+     * @bodyParam email string required The user's email address. Example: john@example.com
+     * @bodyParam password string required The user's password. Example: secretpassword
+     *
+     * @response {
+     *   "message": "Login successful",
+     *   "user": {
+     *     "id": 1,
+     *     "name": "John Doe",
+     *     "email": "john@example.com"
+     *   },
+     *   "token": "1|abc123...",
+     *   "token_type": "Bearer"
+     * }
+     * @response 401 scenario="Invalid credentials" {
+     *   "message": "Invalid credentials"
+     * }
      */
     public function login(LoginRequest $request): JsonResponse
     {
@@ -69,9 +117,18 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout user (revoke current token)
+     * Logout
      *
-     * POST /api/auth/logout
+     * Revoke the current API token.
+     *
+     * @authenticated
+     *
+     * @response {
+     *   "message": "Logged out successfully"
+     * }
+     * @response 401 scenario="Unauthenticated" {
+     *   "message": "Unauthenticated"
+     * }
      */
     public function logout(Request $request): JsonResponse
     {
@@ -83,9 +140,23 @@ class AuthController extends Controller
     }
 
     /**
-     * Get authenticated user
+     * Get current user
      *
-     * GET /api/auth/user
+     * Get the currently authenticated user's details.
+     *
+     * @authenticated
+     *
+     * @response {
+     *   "user": {
+     *     "id": 1,
+     *     "name": "John Doe",
+     *     "email": "john@example.com",
+     *     "is_admin": false
+     *   }
+     * }
+     * @response 401 scenario="Unauthenticated" {
+     *   "message": "Unauthenticated"
+     * }
      */
     public function user(Request $request): JsonResponse
     {

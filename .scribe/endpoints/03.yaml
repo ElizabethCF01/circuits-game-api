@@ -1,0 +1,294 @@
+name: 'Level Validation'
+description: |-
+
+  APIs for validating level configurations (used by level editor)
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/levels/validate
+    metadata:
+      custom: []
+      groupName: 'Level Validation'
+      groupDescription: |-
+
+        APIs for validating level configurations (used by level editor)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Validate level configuration'
+      description: 'Validate a level configuration including grid dimensions, tile placement, and circuit reachability.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      tiles:
+        custom: []
+        name: tiles
+        description: 'Array of tile objects.'
+        required: true
+        example:
+          -
+            type: empty
+          -
+            type: circuit
+          -
+            type: obstacle
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      grid_width:
+        custom: []
+        name: grid_width
+        description: 'Grid width (1-20).'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      grid_height:
+        custom: []
+        name: grid_height
+        description: 'Grid height (1-20).'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      start_x:
+        custom: []
+        name: start_x
+        description: 'Player start X position.'
+        required: true
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      start_y:
+        custom: []
+        name: start_y
+        description: 'Player start Y position.'
+        required: true
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      required_circuits:
+        custom: []
+        name: required_circuits
+        description: 'Number of circuits required to complete.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'tiles[].type':
+        custom: []
+        name: 'tiles[].type'
+        description: 'Tile type: empty, circuit, or obstacle.'
+        required: true
+        example: empty
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      tiles:
+        -
+          type: empty
+        -
+          type: circuit
+        -
+          type: obstacle
+      grid_width: 5
+      grid_height: 5
+      start_x: 0
+      start_y: 0
+      required_circuits: 3
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "valid": true,
+            "errors": [],
+            "warnings": [],
+            "metadata": {
+              "total_tiles": 25,
+              "circuit_count": 3,
+              "reachable_circuits": 3,
+              "unreachable_circuits": []
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "valid": false,
+            "errors": ["Start position is outside grid boundaries"],
+            "warnings": ["Circuit at position 12 is unreachable"],
+            "metadata": {
+              "total_tiles": 25,
+              "circuit_count": 3,
+              "reachable_circuits": 2,
+              "unreachable_circuits": [12]
+            }
+          }
+        headers: []
+        description: 'Validation failed'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/levels/reachability
+    metadata:
+      custom: []
+      groupName: 'Level Validation'
+      groupDescription: |-
+
+        APIs for validating level configurations (used by level editor)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Check tile reachability'
+      description: 'Check which tiles are reachable from the start position and identify any unreachable circuits.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      tiles:
+        custom: []
+        name: tiles
+        description: 'Array of tile objects.'
+        required: true
+        example:
+          -
+            type: empty
+          -
+            type: circuit
+          -
+            type: obstacle
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      grid_width:
+        custom: []
+        name: grid_width
+        description: 'Grid width (1-20).'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      grid_height:
+        custom: []
+        name: grid_height
+        description: 'Grid height (1-20).'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      start_x:
+        custom: []
+        name: start_x
+        description: 'Start X position for reachability check.'
+        required: true
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      start_y:
+        custom: []
+        name: start_y
+        description: 'Start Y position for reachability check.'
+        required: true
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'tiles[].type':
+        custom: []
+        name: 'tiles[].type'
+        description: 'Tile type: empty, circuit, or obstacle.'
+        required: true
+        example: empty
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      tiles:
+        -
+          type: empty
+        -
+          type: circuit
+        -
+          type: obstacle
+      grid_width: 5
+      grid_height: 5
+      start_x: 0
+      start_y: 0
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "reachable_count": 20,
+            "reachable_indices": [0, 1, 2, 3, 5, 6, 7, 10, 11, 12],
+            "unreachable_circuits": [8, 16]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

@@ -41,18 +41,14 @@ Route::middleware('auth:sanctum')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('levels')->group(function () {
-    // Public routes
     Route::get('/', [LevelController::class, 'index']);
     Route::get('/{level}', [LevelController::class, 'show']);
+    Route::post('/validate', [LevelValidationController::class, 'validate']);
+    Route::post('/reachability', [LevelValidationController::class, 'checkReachability']);
 
-    // Authenticated routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{level}/complete', [LevelController::class, 'complete']);
     });
-
-    // Validation routes (for level editor)
-    Route::post('/validate', [LevelValidationController::class, 'validate']);
-    Route::post('/reachability', [LevelValidationController::class, 'checkReachability']);
 });
 
 /*

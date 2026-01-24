@@ -1,0 +1,66 @@
+name: Tiles
+description: |-
+
+  APIs for tile type definitions
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/tiles
+    metadata:
+      custom: []
+      groupName: Tiles
+      groupDescription: |-
+
+        APIs for tile type definitions
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all tile types'
+      description: 'Get all available tile types with their images for rendering the level grid.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "tiles": [
+              {
+                "id": 1,
+                "type": "floor",
+                "image": "floor.png",
+                "media_url": "https://example.com/storage/tiles/floor.png"
+              },
+              {
+                "id": 2,
+                "type": "wall",
+                "image": "wall.png",
+                "media_url": "https://example.com/storage/tiles/wall.png"
+              },
+              {
+                "id": 3,
+                "type": "circuit",
+                "image": "circuit.png",
+                "media_url": "https://example.com/storage/tiles/circuit.png"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

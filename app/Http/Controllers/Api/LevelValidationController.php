@@ -7,6 +7,11 @@ use App\Services\LevelValidatorService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Level Validation
+ *
+ * APIs for validating level configurations (used by level editor)
+ */
 class LevelValidationController extends Controller
 {
     public function __construct(
@@ -14,9 +19,42 @@ class LevelValidationController extends Controller
     ) {}
 
     /**
-     * Validate a level configuration
+     * Validate level configuration
      *
-     * POST /api/levels/validate
+     * Validate a level configuration including grid dimensions, tile placement, and circuit reachability.
+     *
+     * @unauthenticated
+     *
+     * @bodyParam tiles object[] required Array of tile objects. Example: [{"type": "empty"}, {"type": "circuit"}, {"type": "obstacle"}]
+     * @bodyParam tiles[].type string required Tile type: empty, circuit, or obstacle. Example: empty
+     * @bodyParam grid_width integer required Grid width (1-20). Example: 5
+     * @bodyParam grid_height integer required Grid height (1-20). Example: 5
+     * @bodyParam start_x integer required Player start X position. Example: 0
+     * @bodyParam start_y integer required Player start Y position. Example: 0
+     * @bodyParam required_circuits integer required Number of circuits required to complete. Example: 3
+     *
+     * @response {
+     *   "valid": true,
+     *   "errors": [],
+     *   "warnings": [],
+     *   "metadata": {
+     *     "total_tiles": 25,
+     *     "circuit_count": 3,
+     *     "reachable_circuits": 3,
+     *     "unreachable_circuits": []
+     *   }
+     * }
+     * @response 422 scenario="Validation failed" {
+     *   "valid": false,
+     *   "errors": ["Start position is outside grid boundaries"],
+     *   "warnings": ["Circuit at position 12 is unreachable"],
+     *   "metadata": {
+     *     "total_tiles": 25,
+     *     "circuit_count": 3,
+     *     "reachable_circuits": 2,
+     *     "unreachable_circuits": [12]
+     *   }
+     * }
      */
     public function validate(Request $request): JsonResponse
     {
@@ -46,9 +84,24 @@ class LevelValidationController extends Controller
     }
 
     /**
-     * Check reachability from a position
+     * Check tile reachability
      *
-     * POST /api/levels/reachability
+     * Check which tiles are reachable from the start position and identify any unreachable circuits.
+     *
+     * @unauthenticated
+     *
+     * @bodyParam tiles object[] required Array of tile objects. Example: [{"type": "empty"}, {"type": "circuit"}, {"type": "obstacle"}]
+     * @bodyParam tiles[].type string required Tile type: empty, circuit, or obstacle. Example: empty
+     * @bodyParam grid_width integer required Grid width (1-20). Example: 5
+     * @bodyParam grid_height integer required Grid height (1-20). Example: 5
+     * @bodyParam start_x integer required Start X position for reachability check. Example: 0
+     * @bodyParam start_y integer required Start Y position for reachability check. Example: 0
+     *
+     * @response {
+     *   "reachable_count": 20,
+     *   "reachable_indices": [0, 1, 2, 3, 5, 6, 7, 10, 11, 12],
+     *   "unreachable_circuits": [8, 16]
+     * }
      */
     public function checkReachability(Request $request): JsonResponse
     {

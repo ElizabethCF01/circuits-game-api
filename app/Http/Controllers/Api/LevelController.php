@@ -9,6 +9,11 @@ use App\Services\LevelSimulatorService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Levels
+ *
+ * APIs for browsing and completing game levels
+ */
 class LevelController extends Controller
 {
     public function __construct(
@@ -16,21 +21,42 @@ class LevelController extends Controller
     ) {}
 
     /**
-     * List all public levels
+     * List all levels
      *
-     * GET /api/levels
+     * Get a paginated list of all public levels with optional search and filtering.
      *
-     * Query params:
-     * - search: Search by name or description
-     * - difficulty: Filter by difficulty (easy, medium, hard)
-     * - per_page: Items per page (default 15, max 100)
-     * - page: Page number
+     * @unauthenticated
+     *
+     * @queryParam search string Search by name or description. Example: tutorial
+     * @queryParam difficulty string Filter by difficulty (easy, medium, hard). Example: easy
+     * @queryParam per_page integer Items per page (default 15, max 100). Example: 15
+     * @queryParam page integer Page number. Example: 1
+     *
+     * @response {
+     *   "levels": [
+     *     {
+     *       "id": 1,
+     *       "name": "Tutorial",
+     *       "description": "Learn the basics",
+     *       "difficulty": "easy",
+     *       "required_circuits": 3,
+     *       "max_commands": 10,
+     *       "grid_width": 5,
+     *       "grid_height": 5
+     *     }
+     *   ],
+     *   "pagination": {
+     *     "current_page": 1,
+     *     "last_page": 1,
+     *     "per_page": 15,
+     *     "total": 1
+     *   }
+     * }
      */
     public function index(Request $request): JsonResponse
     {
         $query = Level::where('is_public', true);
 
-        // Search by name or description
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -39,19 +65,17 @@ class LevelController extends Controller
             });
         }
 
-        // Filter by difficulty
         if ($request->filled('difficulty')) {
             $query->where('difficulty', $request->difficulty);
         }
 
-        // Pagination
         $perPage = min((int) $request->get('per_page', 15), 100);
 
         $paginator = $query->orderBy('difficulty')
             ->orderBy('name')
             ->paginate($perPage);
 
-        $levels = collect($paginator->items())->map(fn(Level $level) => [
+        $levels = collect($paginator->items())->map(fn (Level $level) => [
             'id' => $level->id,
             'name' => $level->name,
             'description' => $level->description,
@@ -74,9 +98,32 @@ class LevelController extends Controller
     }
 
     /**
-     * Get a single level's details
+     * Get level details
      *
-     * GET /api/levels/{level}
+     * Get full details of a specific level including the tile grid.
+     *
+     * @unauthenticated
+     *
+     * @urlParam level integer required The level ID. Example: 1
+     *
+     * @response {
+     *   "level": {
+     *     "id": 1,
+     *     "name": "Tutorial",
+     *     "description": "Learn the basics",
+     *     "difficulty": "easy",
+     *     "start_x": 0,
+     *     "start_y": 0,
+     *     "required_circuits": 3,
+     *     "max_commands": 10,
+     *     "grid_width": 5,
+     *     "grid_height": 5,
+     *     "tiles": [[1, 1, 2], [1, 3, 1], [1, 1, 1]]
+     *   }
+     * }
+     * @response 404 scenario="Level not found" {
+     *   "message": "Level not found"
+     * }
      */
     public function show(Level $level): JsonResponse
     {
@@ -104,9 +151,53 @@ class LevelController extends Controller
     }
 
     /**
-     * Submit level completion
+     * Complete a level
      *
-     * POST /api/levels/{level}/complete
+     * Submit commands to complete a level. The commands are simulated and if the player collects
+     * all required circuits, XP is awarded based on difficulty and efficiency.
+     *
+     * @authenticated
+     *
+     * @urlParam level integer required The level ID. Example: 1
+     *
+     * @bodyParam commands string[] required Array of commands to execute. Allowed: left, right, up, down, activate_circuit. Example: ["right", "right", "down", "activate_circuit"]
+     *
+     * @response 201 scenario="First completion" {
+     *   "message": "Level completed!",
+     *   "first_completion": true,
+     *   "commands_used": 4,
+     *   "xp_earned": 25,
+     *   "base_xp": 20,
+     *   "efficiency_bonus": 5,
+     *   "player_total_xp": 175
+     * }
+     * @response scenario="Improved score" {
+     *   "message": "New best score!",
+     *   "improved": true,
+     *   "commands_used": 3,
+     *   "xp_earned": 27,
+     *   "xp_bonus": 2,
+     *   "player_total_xp": 177
+     * }
+     * @response scenario="Not improved" {
+     *   "message": "Level completed, but not a new best score",
+     *   "improved": false,
+     *   "commands_used": 5,
+     *   "best_commands": 3
+     * }
+     * @response 422 scenario="Level not completed" {
+     *   "message": "Level not completed",
+     *   "circuits_collected": 2,
+     *   "circuits_required": 3,
+     *   "commands_used": 10
+     * }
+     * @response 422 scenario="Simulation failed" {
+     *   "message": "Simulation failed",
+     *   "error": "Invalid command: jump"
+     * }
+     * @response 400 scenario="No player profile" {
+     *   "message": "Player profile required. Create a player first."
+     * }
      */
     public function complete(CompleteLevelRequest $request, Level $level): JsonResponse
     {
@@ -124,7 +215,6 @@ class LevelController extends Controller
             ], 400);
         }
 
-        // Simulate the level with provided commands
         $result = $this->simulator->simulate($level, $request->commands);
 
         if (! $result->success) {
@@ -143,7 +233,6 @@ class LevelController extends Controller
             ], 422);
         }
 
-        // Calculate XP
         $baseXp = $level->difficulty->baseXp();
         $efficiencyBonus = 0;
 
@@ -153,12 +242,9 @@ class LevelController extends Controller
         }
 
         $totalXp = $baseXp + $efficiencyBonus;
-
-        // Check for existing score
         $existingScore = $player->scores()->where('level_id', $level->id)->first();
 
         if ($existingScore) {
-            // Update only if better (fewer commands)
             if ($result->commandsUsed < $existingScore->commands_used) {
                 $xpDifference = $totalXp - $existingScore->xp_earned;
 
@@ -167,7 +253,6 @@ class LevelController extends Controller
                     'xp_earned' => $totalXp,
                 ]);
 
-                // Update player's total XP
                 if ($xpDifference > 0) {
                     $player->increment('xp', $xpDifference);
                 }
@@ -190,7 +275,6 @@ class LevelController extends Controller
             ]);
         }
 
-        // Create new score
         $player->scores()->create([
             'level_id' => $level->id,
             'xp_earned' => $totalXp,
@@ -198,7 +282,6 @@ class LevelController extends Controller
             'completed_at' => now(),
         ]);
 
-        // Add XP to player
         $player->increment('xp', $totalXp);
 
         return response()->json([
