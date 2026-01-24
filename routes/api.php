@@ -41,3 +41,10 @@ Route::prefix('levels')->group(function () {
     Route::post('/validate', [LevelValidationController::class, 'validate']);
     Route::post('/reachability', [LevelValidationController::class, 'checkReachability']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Tile Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/tiles', [TileController::class, 'index']);
