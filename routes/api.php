@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LevelValidationController;
+use App\Http\Controllers\Api\PlayerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +18,18 @@ Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [AuthController::class, 'user']);
     });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Player Routes (Authenticated)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/player', [PlayerController::class, 'show']);
+    Route::post('/player', [PlayerController::class, 'store']);
+    Route::put('/player', [PlayerController::class, 'update']);
+    Route::delete('/player', [PlayerController::class, 'destroy']);
 });
 
 /*
