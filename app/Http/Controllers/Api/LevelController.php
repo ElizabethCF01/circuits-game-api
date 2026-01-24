@@ -19,32 +19,57 @@ class LevelController extends Controller
      * List all public levels
      *
      * GET /api/levels
+     *
+     * Query params:
+     * - search: Search by name or description
+     * - difficulty: Filter by difficulty (easy, medium, hard)
+     * - per_page: Items per page (default 15, max 100)
+     * - page: Page number
      */
     public function index(Request $request): JsonResponse
     {
         $query = Level::where('is_public', true);
 
+        // Search by name or description
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
         // Filter by difficulty
-        if ($request->has('difficulty')) {
+        if ($request->filled('difficulty')) {
             $query->where('difficulty', $request->difficulty);
         }
 
-        $levels = $query->orderBy('difficulty')
+        // Pagination
+        $perPage = min((int) $request->get('per_page', 15), 100);
+
+        $paginator = $query->orderBy('difficulty')
             ->orderBy('name')
-            ->get()
-            ->map(fn(Level $level) => [
-                'id' => $level->id,
-                'name' => $level->name,
-                'description' => $level->description,
-                'difficulty' => $level->difficulty->value,
-                'required_circuits' => $level->required_circuits,
-                'max_commands' => $level->max_commands,
-                'grid_width' => $level->grid_width,
-                'grid_height' => $level->grid_height,
-            ]);
+            ->paginate($perPage);
+
+        $levels = collect($paginator->items())->map(fn(Level $level) => [
+            'id' => $level->id,
+            'name' => $level->name,
+            'description' => $level->description,
+            'difficulty' => $level->difficulty->value,
+            'required_circuits' => $level->required_circuits,
+            'max_commands' => $level->max_commands,
+            'grid_width' => $level->grid_width,
+            'grid_height' => $level->grid_height,
+        ]);
 
         return response()->json([
             'levels' => $levels,
+            'pagination' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+            ],
         ]);
     }
 
