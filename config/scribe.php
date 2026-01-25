@@ -1,9 +1,5 @@
 <?php
 
-use Knuckles\Scribe\Extracting\Strategies;
-use Knuckles\Scribe\Config\Defaults;
-use function Knuckles\Scribe\Config\{removeStrategies, configureStrategy};
-
 // Only the most common configs are shown. See the https://scribe.knuckles.wtf/laravel/reference/config for all.
 
 return [
@@ -208,42 +204,8 @@ return [
     ],
 
     // The strategies Scribe will use to extract information about your routes at each stage.
-    // Use configureStrategy() to specify settings for a strategy in the list.
-    // Use removeStrategies() to remove an included strategy.
-    'strategies' => [
-        'metadata' => [
-            ...Defaults::METADATA_STRATEGIES,
-        ],
-        'headers' => [
-            ...Defaults::HEADERS_STRATEGIES,
-            Strategies\StaticData::withSettings(data: [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ]),
-        ],
-        'urlParameters' => [
-            ...Defaults::URL_PARAMETERS_STRATEGIES,
-        ],
-        'queryParameters' => [
-            ...Defaults::QUERY_PARAMETERS_STRATEGIES,
-        ],
-        'bodyParameters' => [
-            ...Defaults::BODY_PARAMETERS_STRATEGIES,
-        ],
-        'responses' => configureStrategy(
-            Defaults::RESPONSES_STRATEGIES,
-            Strategies\Responses\ResponseCalls::withSettings(
-                only: ['GET *'],
-                // Recommended: disable debug mode in response calls to avoid error stack traces in responses
-                config: [
-                    'app.debug' => false,
-                ]
-            )
-        ),
-        'responseFields' => [
-            ...Defaults::RESPONSE_FIELDS_STRATEGIES,
-        ]
-    ],
+    // Scribe will use its default strategies. Customize only in development where Scribe classes are available.
+    'strategies' => [],
 
     // For response calls, API resource responses and transformer responses,
     // Scribe will try to start database transactions, so no changes are persisted to your database.
