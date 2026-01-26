@@ -8,8 +8,8 @@ use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\Api\ResetPasswordRequest;
 use App\Mail\PasswordResetEmail;
-use App\Mail\WelcomeEmail;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +61,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Mail::to($user)->send(new WelcomeEmail($user));
+        event(new Registered($user));
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
