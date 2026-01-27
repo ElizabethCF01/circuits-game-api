@@ -33,12 +33,18 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'admin_code' => ['nullable', 'string', 'max:255'],
         ]);
+
+        $isAdmin = $request->admin_code
+            && config('app.admin_code')
+            && $request->admin_code === config('app.admin_code');
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_admin' => $isAdmin,
         ]);
 
         event(new Registered($user));
