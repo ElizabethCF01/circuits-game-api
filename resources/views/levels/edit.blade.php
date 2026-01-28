@@ -33,6 +33,20 @@
                             <x-breeze.input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
+                        <div class="mb-4 flex items-center">
+                            <input type="hidden" name="is_public" value="0">
+                            <input
+                                id="is_public"
+                                type="checkbox"
+                                name="is_public"
+                                value="1"
+                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                {{ old('is_public', $level->is_public) ? 'checked' : '' }}
+                            >
+                            <x-breeze.input-label for="is_public" value="Public" class="ml-2" />
+                            <span class="ml-2 text-sm text-gray-500">Make this level visible to players</span>
+                        </div>
+
                         <div class="grid grid-cols-3 gap-4" x-data="{ startX: {{ old('start_x', $level->start_x) }}, startY: {{ old('start_y', $level->start_y) }}, requiredCircuits: {{ old('required_circuits', $level->required_circuits) }} }">
                             <div class="mb-4">
                                 <x-breeze.input-label for="start_x" value="Start X" />

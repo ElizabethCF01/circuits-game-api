@@ -25,6 +25,7 @@ class UpdateLevelRequest extends FormRequest
             'grid_width' => 'required|integer|min:1|max:20',
             'grid_height' => 'required|integer|min:1|max:20',
             'tiles' => ['required', 'json', new ValidLevelGrid()],
+            'is_public' => 'boolean',
         ];
     }
 

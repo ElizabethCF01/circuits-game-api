@@ -40,6 +40,15 @@ class LevelTable extends Component
         }
     }
 
+    public function togglePublic(int $id): void
+    {
+        $level = Level::find($id);
+
+        if ($level) {
+            $level->update(['is_public' => !$level->is_public]);
+        }
+    }
+
     public function deleteLevel(int $id): void
     {
         $level = Level::find($id);
