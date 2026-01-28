@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\LevelValidationController;
 use App\Http\Controllers\Api\PlayerController;
 use App\Http\Controllers\Api\TileController;
+use App\Http\Controllers\Api\TriviaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,3 +60,10 @@ Route::prefix('levels')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/tiles', [TileController::class, 'index']);
+
+/*
+|--------------------------------------------------------------------------
+| Trivia Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/trivia', [TriviaController::class, 'index']);
