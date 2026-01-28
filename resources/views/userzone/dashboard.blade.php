@@ -62,6 +62,10 @@
                 @endif
             </div>
 
+            <div class="mb-6">
+                <livewire:trivia-card />
+            </div>
+
             @if(Auth::user()->is_admin)
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Admin Quick Access</h3>
