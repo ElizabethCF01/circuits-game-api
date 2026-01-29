@@ -48,8 +48,7 @@ class TileController extends Controller
         $tiles = Tile::all()->map(fn (Tile $tile) => [
             'id' => $tile->id,
             'type' => $tile->type,
-            'image' => $tile->image,
-            'media_url' => $tile->getFirstMediaUrl(),
+            'image_url' => $tile->getFirstMediaUrl('images'),
         ]);
 
         return response()->json([
