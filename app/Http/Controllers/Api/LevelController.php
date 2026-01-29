@@ -33,29 +33,7 @@ class LevelController extends Controller
      * @queryParam per_page integer Items per page (default 15, max 100). Example: 15
      * @queryParam page integer Page number. Example: 1
      *
-     * @response scenario="Unauthenticated" {
-     *   "levels": [
-     *     {
-     *       "id": 1,
-     *       "name": "Tutorial",
-     *       "description": "Learn the basics",
-     *       "difficulty": "easy",
-     *       "required_circuits": 3,
-     *       "max_commands": 10,
-     *       "grid_width": 5,
-     *       "grid_height": 5,
-     *       "played": false,
-     *       "score": null
-     *     }
-     *   ],
-     *   "pagination": {
-     *     "current_page": 1,
-     *     "last_page": 1,
-     *     "per_page": 15,
-     *     "total": 1
-     *   }
-     * }
-     * @response scenario="Authenticated with player progress" {
+     * @response {
      *   "levels": [
      *     {
      *       "id": 1,

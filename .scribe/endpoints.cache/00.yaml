@@ -200,6 +200,159 @@ endpoints:
     custom: []
     httpMethods:
       - POST
+    uri: api/auth/forgot-password
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: |-
+
+        APIs for user authentication
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Forgot Password'
+      description: "Send a password reset link to the user's email."
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        custom: []
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      email: john@example.com
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "If an account exists with this email, a password reset link has been sent."
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/auth/reset-password
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: |-
+
+        APIs for user authentication
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Reset Password'
+      description: "Reset the user's password using the token from the email."
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      token:
+        custom: []
+        name: token
+        description: 'The password reset token from the email.'
+        required: true
+        example: abc123...
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'The new password (min 8 characters).'
+        required: true
+        example: newsecretpassword
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      password_confirmation:
+        custom: []
+        name: password_confirmation
+        description: 'Password confirmation.'
+        required: true
+        example: newsecretpassword
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      token: abc123...
+      email: john@example.com
+      password: newsecretpassword
+      password_confirmation: newsecretpassword
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Password has been reset successfully."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 400
+        content: |-
+          {
+            "message": "Invalid or expired password reset token."
+          }
+        headers: []
+        description: 'Invalid or expired token'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
     uri: api/auth/logout
     metadata:
       custom: []
