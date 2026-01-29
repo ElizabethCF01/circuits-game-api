@@ -19,7 +19,10 @@ endpoints:
       subgroup: ''
       subgroupDescription: ''
       title: 'List all levels'
-      description: 'Get a paginated list of all public levels with optional search and filtering.'
+      description: |-
+        Get a paginated list of all public levels with optional search and filtering.
+        If a valid Sanctum token is provided, each level will include `played` and `score`
+        fields indicating whether the authenticated player has completed the level.
       authenticated: false
       deprecated: false
     headers:
@@ -95,7 +98,9 @@ endpoints:
                 "required_circuits": 3,
                 "max_commands": 10,
                 "grid_width": 5,
-                "grid_height": 5
+                "grid_height": 5,
+                "played": false,
+                "score": null
               }
             ],
             "pagination": {
@@ -106,7 +111,39 @@ endpoints:
             }
           }
         headers: []
-        description: ''
+        description: Unauthenticated
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "levels": [
+              {
+                "id": 1,
+                "name": "Tutorial",
+                "description": "Learn the basics",
+                "difficulty": "easy",
+                "required_circuits": 3,
+                "max_commands": 10,
+                "grid_width": 5,
+                "grid_height": 5,
+                "played": true,
+                "score": {
+                  "xp_earned": 25,
+                  "commands_used": 4,
+                  "completed_at": "2026-01-28T10:30:00.000000Z"
+                }
+              }
+            ],
+            "pagination": {
+              "current_page": 1,
+              "last_page": 1,
+              "per_page": 15,
+              "total": 1
+            }
+          }
+        headers: []
+        description: 'Authenticated with player progress'
     responseFields: []
     auth: []
     controller: null
