@@ -32,21 +32,21 @@ The API uses a relational database with the following main entities:
 
 Built using the [Laravel Educational Starter Pack](https://github.com/ndeblauw/starterpack).
 
-| Category | Technology |
-|---|---|
-| Framework | Laravel 12 |
-| PHP | 8.3+ |
-| Authentication | Laravel Sanctum (Bearer tokens) |
-| Database | SQLite |
-| Auth Scaffolding | Laravel Breeze |
-| Frontend | Tailwind CSS, Alpine.js, Livewire 4 |
-| Media Management | Spatie Media Library |
-| API Documentation | Scribe 5 + Scalar UI |
-| Email | Resend |
-| Backups | Spatie Laravel Backup |
-| Testing | Pest PHP |
-| Code Style | Laravel Pint |
-| Debugging | Laravel Debugbar |
+| Category          | Technology                          |
+| ----------------- | ----------------------------------- |
+| Framework         | Laravel 12                          |
+| PHP               | 8.3+                                |
+| Authentication    | Laravel Sanctum (Bearer tokens)     |
+| Database          | SQLite                              |
+| Auth Scaffolding  | Laravel Breeze                      |
+| Frontend          | Tailwind CSS, Alpine.js, Livewire 4 |
+| Media Management  | Spatie Media Library                |
+| API Documentation | Scribe 5 + Scalar UI                |
+| Email             | Resend                              |
+| Backups           | Spatie Laravel Backup               |
+| Testing           | Pest PHP                            |
+| Code Style        | Laravel Pint                        |
+| Debugging         | Laravel Debugbar                    |
 
 ## Installation
 
@@ -61,8 +61,8 @@ Built using the [Laravel Educational Starter Pack](https://github.com/ndeblauw/s
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/ElizabethCF01/circuits-web-game.git
-cd circuits-web-game
+git clone https://github.com/ElizabethCF01/circuits-game-api.git
+cd circuits-game-api
 ```
 
 2. Run the setup script:
@@ -92,51 +92,51 @@ All API routes are prefixed with `/api`. Authentication is handled via Bearer to
 
 ### Authentication
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | No | Register a new user |
-| `POST` | `/api/auth/login` | No | Login and receive a token |
-| `POST` | `/api/auth/logout` | Yes | Revoke current token |
-| `GET` | `/api/auth/user` | Yes | Get authenticated user |
-| `POST` | `/api/auth/forgot-password` | No | Send password reset email |
-| `POST` | `/api/auth/reset-password` | No | Reset password with token |
+| Method | Endpoint                    | Auth | Description               |
+| ------ | --------------------------- | ---- | ------------------------- |
+| `POST` | `/api/auth/register`        | No   | Register a new user       |
+| `POST` | `/api/auth/login`           | No   | Login and receive a token |
+| `POST` | `/api/auth/logout`          | Yes  | Revoke current token      |
+| `GET`  | `/api/auth/user`            | Yes  | Get authenticated user    |
+| `POST` | `/api/auth/forgot-password` | No   | Send password reset email |
+| `POST` | `/api/auth/reset-password`  | No   | Reset password with token |
 
 ### Player
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/player` | Yes | Get player profile |
-| `POST` | `/api/player` | Yes | Create player profile |
-| `PUT` | `/api/player` | Yes | Update player profile |
-| `DELETE` | `/api/player` | Yes | Delete player profile |
-| `GET` | `/api/player/progress` | Yes | Get progress with scores |
+| Method   | Endpoint               | Auth | Description              |
+| -------- | ---------------------- | ---- | ------------------------ |
+| `GET`    | `/api/player`          | Yes  | Get player profile       |
+| `POST`   | `/api/player`          | Yes  | Create player profile    |
+| `PUT`    | `/api/player`          | Yes  | Update player profile    |
+| `DELETE` | `/api/player`          | Yes  | Delete player profile    |
+| `GET`    | `/api/player/progress` | Yes  | Get progress with scores |
 
 ### Levels
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/levels` | No | List levels (paginated, filterable) |
-| `GET` | `/api/levels/{level}` | No | Get level details |
-| `POST` | `/api/levels/{level}/complete` | Yes | Submit level solution |
+| Method | Endpoint                       | Auth | Description                         |
+| ------ | ------------------------------ | ---- | ----------------------------------- |
+| `GET`  | `/api/levels`                  | No   | List levels (paginated, filterable) |
+| `GET`  | `/api/levels/{level}`          | No   | Get level details                   |
+| `POST` | `/api/levels/{level}/complete` | Yes  | Submit level solution               |
 
 ### Level Validation
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/levels/validate` | No | Validate level configuration |
-| `POST` | `/api/levels/reachability` | No | Check tile reachability |
+| Method | Endpoint                   | Auth | Description                  |
+| ------ | -------------------------- | ---- | ---------------------------- |
+| `POST` | `/api/levels/validate`     | No   | Validate level configuration |
+| `POST` | `/api/levels/reachability` | No   | Check tile reachability      |
 
 ### Tiles
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/tiles` | No | List all tile types |
+| Method | Endpoint     | Auth | Description         |
+| ------ | ------------ | ---- | ------------------- |
+| `GET`  | `/api/tiles` | No   | List all tile types |
 
 ### Trivia
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/trivia` | No | Get a random trivia question |
+| Method | Endpoint      | Auth | Description                  |
+| ------ | ------------- | ---- | ---------------------------- |
+| `GET`  | `/api/trivia` | No   | Get a random trivia question |
 
 ## API Documentation
 
