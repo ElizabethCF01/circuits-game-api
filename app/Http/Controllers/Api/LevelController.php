@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CompleteLevelRequest;
 use App\Models\Level;
+use App\Models\Score;
 use App\Services\LevelSimulatorService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,15 +25,15 @@ class LevelController extends Controller
      * List all levels
      *
      * Get a paginated list of all public levels with optional search and filtering.
-     *
-     * @unauthenticated
+     * If a valid Sanctum token is provided, each level will include `played` and `score`
+     * fields indicating whether the authenticated player has completed the level.
      *
      * @queryParam search string Search by name or description. Example: tutorial
      * @queryParam difficulty string Filter by difficulty (easy, medium, hard). Example: easy
      * @queryParam per_page integer Items per page (default 15, max 100). Example: 15
      * @queryParam page integer Page number. Example: 1
      *
-     * @response {
+     * @response scenario="Unauthenticated" {
      *   "levels": [
      *     {
      *       "id": 1,
@@ -42,7 +43,35 @@ class LevelController extends Controller
      *       "required_circuits": 3,
      *       "max_commands": 10,
      *       "grid_width": 5,
-     *       "grid_height": 5
+     *       "grid_height": 5,
+     *       "played": false,
+     *       "score": null
+     *     }
+     *   ],
+     *   "pagination": {
+     *     "current_page": 1,
+     *     "last_page": 1,
+     *     "per_page": 15,
+     *     "total": 1
+     *   }
+     * }
+     * @response scenario="Authenticated with player progress" {
+     *   "levels": [
+     *     {
+     *       "id": 1,
+     *       "name": "Tutorial",
+     *       "description": "Learn the basics",
+     *       "difficulty": "easy",
+     *       "required_circuits": 3,
+     *       "max_commands": 10,
+     *       "grid_width": 5,
+     *       "grid_height": 5,
+     *       "played": true,
+     *       "score": {
+     *         "xp_earned": 25,
+     *         "commands_used": 4,
+     *         "completed_at": "2026-01-28T10:30:00.000000Z"
+     *       }
      *     }
      *   ],
      *   "pagination": {
@@ -75,16 +104,37 @@ class LevelController extends Controller
             ->orderBy('name')
             ->paginate($perPage);
 
-        $levels = collect($paginator->items())->map(fn (Level $level) => [
-            'id' => $level->id,
-            'name' => $level->name,
-            'description' => $level->description,
-            'difficulty' => $level->difficulty->value,
-            'required_circuits' => $level->required_circuits,
-            'max_commands' => $level->max_commands,
-            'grid_width' => $level->grid_width,
-            'grid_height' => $level->grid_height,
-        ]);
+        $player = auth('sanctum')->user()?->player;
+        $scoresByLevel = collect();
+
+        if ($player) {
+            $levelIds = collect($paginator->items())->pluck('id');
+            $scoresByLevel = Score::where('player_id', $player->id)
+                ->whereIn('level_id', $levelIds)
+                ->get()
+                ->keyBy('level_id');
+        }
+
+        $levels = collect($paginator->items())->map(function (Level $level) use ($scoresByLevel) {
+            $score = $scoresByLevel->get($level->id);
+
+            return [
+                'id' => $level->id,
+                'name' => $level->name,
+                'description' => $level->description,
+                'difficulty' => $level->difficulty->value,
+                'required_circuits' => $level->required_circuits,
+                'max_commands' => $level->max_commands,
+                'grid_width' => $level->grid_width,
+                'grid_height' => $level->grid_height,
+                'played' => $score !== null,
+                'score' => $score ? [
+                    'xp_earned' => $score->xp_earned,
+                    'commands_used' => $score->commands_used,
+                    'completed_at' => $score->completed_at,
+                ] : null,
+            ];
+        });
 
         return response()->json([
             'levels' => $levels,
