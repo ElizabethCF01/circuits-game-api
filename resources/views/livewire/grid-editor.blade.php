@@ -73,13 +73,6 @@
         >
             Clear Grid
         </button>
-        <button
-            type="button"
-            wire:click="validateGrid"
-            class="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
-        >
-            Validate
-        </button>
     </div>
 
     {{-- Stats with validation info --}}
