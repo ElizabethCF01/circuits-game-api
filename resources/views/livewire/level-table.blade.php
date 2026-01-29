@@ -63,6 +63,9 @@
                             Circuits
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Actions
                         </th>
                     </tr>
@@ -84,6 +87,15 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $level->grid_width }}x{{ $level->grid_height }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $level->required_circuits }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <button
+                                    wire:click="togglePublic({{ $level->id }})"
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer
+                                        {{ $level->is_public ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}"
+                                >
+                                    {{ $level->is_public ? 'Public' : 'Draft' }}
+                                </button>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('admin.levels.show', $level) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
                                 <a href="{{ route('admin.levels.edit', $level) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>

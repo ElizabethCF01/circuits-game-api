@@ -41,6 +41,19 @@
                                     {{ ucfirst($level->difficulty->value) }}
                                 </span>
                             </div>
+
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold text-gray-700">Visibility:</h3>
+                                @if($level->is_public)
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Public
+                                    </span>
+                                @else
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        Draft
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
                         <div>
