@@ -61,8 +61,8 @@ Built using the [Laravel Educational Starter Pack](https://github.com/ndeblauw/s
 1. Clone the repository:
 
 ```bash
-git clone <your-repo-url>
-cd circuitsapi
+git clone https://github.com/ElizabethCF01/circuits-web-game.git
+cd circuits-web-game
 ```
 
 2. Run the setup script:
