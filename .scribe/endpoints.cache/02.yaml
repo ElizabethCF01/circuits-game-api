@@ -99,8 +99,12 @@ endpoints:
                 "max_commands": 10,
                 "grid_width": 5,
                 "grid_height": 5,
-                "played": false,
-                "score": null
+                "played": true,
+                "score": {
+                  "xp_earned": 25,
+                  "commands_used": 4,
+                  "completed_at": "2026-01-28T10:30:00.000000Z"
+                }
               }
             ],
             "pagination": {

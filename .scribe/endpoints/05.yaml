@@ -34,7 +34,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"question":"AMD created the first consumer 64-bit processor.","difficulty":"medium","correct_answer":"True","answers":["True","False"]}'
+        content: '{"question":"The Windows ME operating system was released in the year 2000.","difficulty":"easy","correct_answer":"True","answers":["True","False"]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
