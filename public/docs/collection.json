@@ -1,0 +1,830 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/circuitsapi.test"
+        }
+    ],
+    "info": {
+        "name": "CircuitsAPI API Documentation",
+        "_postman_id": "05ec9680-cd9b-4c21-b556-5697473c739f",
+        "description": "API for the Circuits game - a grid-based puzzle game where players collect circuits by navigating through levels.",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "\nAPIs for user authentication",
+            "item": [
+                {
+                    "name": "Register a new user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"secretpassword\",\"password_confirmation\":\"secretpassword\"}"
+                        },
+                        "description": "Create a new user account and return an API token.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  },\n  \"token\": \"1|abc123...\",\n  \"token_type\": \"Bearer\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The email has already been taken.\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"]\n  }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john@example.com\",\"password\":\"secretpassword\"}"
+                        },
+                        "description": "Authenticate a user and return an API token.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Login successful\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  },\n  \"token\": \"1|abc123...\",\n  \"token_type\": \"Bearer\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Invalid credentials\"\n}",
+                            "name": "Invalid credentials"
+                        }
+                    ]
+                },
+                {
+                    "name": "Forgot Password",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/forgot-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/forgot-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john@example.com\"}"
+                        },
+                        "description": "Send a password reset link to the user's email.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"If an account exists with this email, a password reset link has been sent.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Reset Password",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/reset-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/reset-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"token\":\"abc123...\",\"email\":\"john@example.com\",\"password\":\"newsecretpassword\",\"password_confirmation\":\"newsecretpassword\"}"
+                        },
+                        "description": "Reset the user's password using the token from the email.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Password has been reset successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Invalid or expired password reset token.\"\n}",
+                            "name": "Invalid or expired token"
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Revoke the current API token."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Logged out successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated\"\n}",
+                            "name": "Unauthenticated"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get current user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/user"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get the currently authenticated user's details."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"is_admin\": false\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated\"\n}",
+                            "name": "Unauthenticated"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Level Validation",
+            "description": "\nAPIs for validating level configurations (used by level editor)",
+            "item": [
+                {
+                    "name": "Validate level configuration",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/levels\/validate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/levels\/validate"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tiles\":[{\"type\":\"empty\"},{\"type\":\"circuit\"},{\"type\":\"obstacle\"}],\"grid_width\":5,\"grid_height\":5,\"start_x\":0,\"start_y\":0,\"required_circuits\":3}"
+                        },
+                        "description": "Validate a level configuration including grid dimensions, tile placement, and circuit reachability.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"valid\": true,\n  \"errors\": [],\n  \"warnings\": [],\n  \"metadata\": {\n    \"total_tiles\": 25,\n    \"circuit_count\": 3,\n    \"reachable_circuits\": 3,\n    \"unreachable_circuits\": []\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"valid\": false,\n  \"errors\": [\"Start position is outside grid boundaries\"],\n  \"warnings\": [\"Circuit at position 12 is unreachable\"],\n  \"metadata\": {\n    \"total_tiles\": 25,\n    \"circuit_count\": 3,\n    \"reachable_circuits\": 2,\n    \"unreachable_circuits\": [12]\n  }\n}",
+                            "name": "Validation failed"
+                        }
+                    ]
+                },
+                {
+                    "name": "Check tile reachability",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/levels\/reachability",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/levels\/reachability"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tiles\":[{\"type\":\"empty\"},{\"type\":\"circuit\"},{\"type\":\"obstacle\"}],\"grid_width\":5,\"grid_height\":5,\"start_x\":0,\"start_y\":0}"
+                        },
+                        "description": "Check which tiles are reachable from the start position and identify any unreachable circuits.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"reachable_count\": 20,\n  \"reachable_indices\": [0, 1, 2, 3, 5, 6, 7, 10, 11, 12],\n  \"unreachable_circuits\": [8, 16]\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Levels",
+            "description": "\nAPIs for browsing and completing game levels",
+            "item": [
+                {
+                    "name": "List all levels",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/levels",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "tutorial",
+                                    "description": "Search by name or description.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "difficulty",
+                                    "value": "easy",
+                                    "description": "Filter by difficulty (easy, medium, hard).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Items per page (default 15, max 100).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/levels?search=tutorial&difficulty=easy&per_page=15&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a paginated list of all public levels with optional search and filtering.\nIf a valid Sanctum token is provided, each level will include `played` and `score`\nfields indicating whether the authenticated player has completed the level.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"levels\": [\n    {\n      \"id\": 1,\n      \"name\": \"Tutorial\",\n      \"description\": \"Learn the basics\",\n      \"difficulty\": \"easy\",\n      \"required_circuits\": 3,\n      \"max_commands\": 10,\n      \"grid_width\": 5,\n      \"grid_height\": 5,\n      \"played\": true,\n      \"score\": {\n        \"xp_earned\": 25,\n        \"commands_used\": 4,\n        \"completed_at\": \"2026-01-28T10:30:00.000000Z\"\n      }\n    }\n  ],\n  \"pagination\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 15,\n    \"total\": 1\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get level details",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/levels\/:level_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/levels\/:level_id",
+                            "variable": [
+                                {
+                                    "id": "level_id",
+                                    "key": "level_id",
+                                    "value": "11",
+                                    "description": "The ID of the level."
+                                },
+                                {
+                                    "id": "level",
+                                    "key": "level",
+                                    "value": "1",
+                                    "description": "The level ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get full details of a specific level including the tile grid.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"level\": {\n    \"id\": 1,\n    \"name\": \"Tutorial\",\n    \"description\": \"Learn the basics\",\n    \"difficulty\": \"easy\",\n    \"start_x\": 0,\n    \"start_y\": 0,\n    \"required_circuits\": 3,\n    \"max_commands\": 10,\n    \"grid_width\": 5,\n    \"grid_height\": 5,\n    \"tiles\": [[1, 1, 2], [1, 3, 1], [1, 1, 1]]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Level not found\"\n}",
+                            "name": "Level not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Complete a level",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/levels\/:level_id\/complete",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/levels\/:level_id\/complete",
+                            "variable": [
+                                {
+                                    "id": "level_id",
+                                    "key": "level_id",
+                                    "value": "11",
+                                    "description": "The ID of the level."
+                                },
+                                {
+                                    "id": "level",
+                                    "key": "level",
+                                    "value": "1",
+                                    "description": "The level ID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"commands\":[\"right\",\"right\",\"down\",\"activate_circuit\"]}"
+                        },
+                        "description": "Submit commands to complete a level. The commands are simulated and if the player collects\nall required circuits, XP is awarded based on difficulty and efficiency."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"New best score!\",\n  \"improved\": true,\n  \"commands_used\": 3,\n  \"xp_earned\": 27,\n  \"xp_bonus\": 2,\n  \"player_total_xp\": 177\n}",
+                            "name": "Improved score"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Level completed, but not a new best score\",\n  \"improved\": false,\n  \"commands_used\": 5,\n  \"best_commands\": 3\n}",
+                            "name": "Not improved"
+                        },
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Level completed!\",\n  \"first_completion\": true,\n  \"commands_used\": 4,\n  \"xp_earned\": 25,\n  \"base_xp\": 20,\n  \"efficiency_bonus\": 5,\n  \"player_total_xp\": 175\n}",
+                            "name": "First completion"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Player profile required. Create a player first.\"\n}",
+                            "name": "No player profile"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Level not completed\",\n  \"circuits_collected\": 2,\n  \"circuits_required\": 3,\n  \"commands_used\": 10\n}",
+                            "name": "Level not completed"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Simulation failed\",\n  \"error\": \"Invalid command: jump\"\n}",
+                            "name": "Simulation failed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Player",
+            "description": "\nAPIs for managing player profiles",
+            "item": [
+                {
+                    "name": "Get player profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/player",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/player"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get the authenticated user's player profile."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"player\": {\n    \"id\": 1,\n    \"nickname\": \"CircuitMaster\",\n    \"xp\": 150,\n    \"created_at\": \"2024-01-15T10:30:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:30:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Player not found\"\n}",
+                            "name": "Player not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create player profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/player",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/player"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nickname\":\"CircuitMaster\"}"
+                        },
+                        "description": "Create a new player profile for the authenticated user. Each user can only have one player."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Player created successfully\",\n  \"player\": {\n    \"id\": 1,\n    \"nickname\": \"CircuitMaster\",\n    \"xp\": 0,\n    \"created_at\": \"2024-01-15T10:30:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:30:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"Player already exists\"\n}",
+                            "name": "Player already exists"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The nickname has already been taken.\",\n  \"errors\": {\n    \"nickname\": [\"The nickname has already been taken.\"]\n  }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete player profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/player",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/player"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Delete the authenticated user's player profile. This will also delete all associated scores."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Player deleted successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Player not found\"\n}",
+                            "name": "Player not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get player progress",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/player\/progress",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/player\/progress"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get the player's progress including all completed levels and scores."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"player\": {\n    \"nickname\": \"CircuitMaster\",\n    \"total_xp\": 150,\n    \"levels_completed\": 3\n  },\n  \"scores\": [\n    {\n      \"level_id\": 1,\n      \"level_name\": \"Tutorial\",\n      \"difficulty\": \"easy\",\n      \"xp_earned\": 25,\n      \"commands_used\": 8,\n      \"completed_at\": \"2024-01-15T10:30:00.000000Z\"\n    }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Player not found\"\n}",
+                            "name": "Player not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Tiles",
+            "description": "\nAPIs for tile type definitions",
+            "item": [
+                {
+                    "name": "List all tile types",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tiles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tiles"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get all available tile types with their images for rendering the level grid.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"tiles\": [\n    {\n      \"id\": 1,\n      \"type\": \"floor\",\n      \"image\": \"floor.png\",\n      \"media_url\": \"https:\/\/example.com\/storage\/tiles\/floor.png\"\n    },\n    {\n      \"id\": 2,\n      \"type\": \"wall\",\n      \"image\": \"wall.png\",\n      \"media_url\": \"https:\/\/example.com\/storage\/tiles\/wall.png\"\n    },\n    {\n      \"id\": 3,\n      \"type\": \"circuit\",\n      \"image\": \"circuit.png\",\n      \"media_url\": \"https:\/\/example.com\/storage\/tiles\/circuit.png\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Trivia",
+            "description": "\nAPIs for programming trivia questions",
+            "item": [
+                {
+                    "name": "Get a trivia question",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/trivia",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/trivia"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Fetch a random true\/false programming trivia question from Open Trivia DB.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"question\":\"The NVidia GTX 1080 gets its name because it can only render at a 1920x1080 screen resolution.\",\"difficulty\":\"easy\",\"correct_answer\":\"False\",\"answers\":[\"True\",\"False\"]}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}
