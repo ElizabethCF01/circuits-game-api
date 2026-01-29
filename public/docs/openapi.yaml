@@ -1,0 +1,1482 @@
+openapi: 3.0.3
+info:
+  title: 'CircuitsAPI API Documentation'
+  description: 'API for the Circuits game - a grid-based puzzle game where players collect circuits by navigating through levels.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://circuitsapi.test'
+tags:
+  -
+    name: Authentication
+    description: "\nAPIs for user authentication"
+  -
+    name: 'Level Validation'
+    description: "\nAPIs for validating level configurations (used by level editor)"
+  -
+    name: Levels
+    description: "\nAPIs for browsing and completing game levels"
+  -
+    name: Player
+    description: "\nAPIs for managing player profiles"
+  -
+    name: Tiles
+    description: "\nAPIs for tile type definitions"
+  -
+    name: Trivia
+    description: "\nAPIs for programming trivia questions"
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'To authenticate, first call the <b>login</b> or <b>register</b> endpoint to get a token. Then include it in the Authorization header as: <code>Bearer {token}</code>'
+security:
+  -
+    default: []
+paths:
+  /api/auth/register:
+    post:
+      summary: 'Register a new user'
+      operationId: registerANewUser
+      description: 'Create a new user account and return an API token.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User registered successfully'
+                  user:
+                    id: 1
+                    name: 'John Doe'
+                    email: john@example.com
+                  token: 1|abc123...
+                  token_type: Bearer
+                properties:
+                  message:
+                    type: string
+                    example: 'User registered successfully'
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john@example.com
+                  token:
+                    type: string
+                    example: 1|abc123...
+                  token_type:
+                    type: string
+                    example: Bearer
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The email has already been taken.'
+                  errors:
+                    email:
+                      - 'The email has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The email has already been taken.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The email has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "The user's name."
+                  example: 'John Doe'
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: john@example.com
+                password:
+                  type: string
+                  description: 'The password (min 8 characters).'
+                  example: secretpassword
+                password_confirmation:
+                  type: string
+                  description: 'Password confirmation.'
+                  example: secretpassword
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+      security: []
+  /api/auth/login:
+    post:
+      summary: Login
+      operationId: login
+      description: 'Authenticate a user and return an API token.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Login successful'
+                  user:
+                    id: 1
+                    name: 'John Doe'
+                    email: john@example.com
+                  token: 1|abc123...
+                  token_type: Bearer
+                properties:
+                  message:
+                    type: string
+                    example: 'Login successful'
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john@example.com
+                  token:
+                    type: string
+                    example: 1|abc123...
+                  token_type:
+                    type: string
+                    example: Bearer
+        401:
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid credentials'
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: john@example.com
+                password:
+                  type: string
+                  description: "The user's password."
+                  example: secretpassword
+              required:
+                - email
+                - password
+      security: []
+  /api/auth/forgot-password:
+    post:
+      summary: 'Forgot Password'
+      operationId: forgotPassword
+      description: "Send a password reset link to the user's email."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'If an account exists with this email, a password reset link has been sent.'
+                properties:
+                  message:
+                    type: string
+                    example: 'If an account exists with this email, a password reset link has been sent.'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: john@example.com
+              required:
+                - email
+      security: []
+  /api/auth/reset-password:
+    post:
+      summary: 'Reset Password'
+      operationId: resetPassword
+      description: "Reset the user's password using the token from the email."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Password has been reset successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Password has been reset successfully.'
+        400:
+          description: 'Invalid or expired token'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid or expired password reset token.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid or expired password reset token.'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The password reset token from the email.'
+                  example: abc123...
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: john@example.com
+                password:
+                  type: string
+                  description: 'The new password (min 8 characters).'
+                  example: newsecretpassword
+                password_confirmation:
+                  type: string
+                  description: 'Password confirmation.'
+                  example: newsecretpassword
+              required:
+                - token
+                - email
+                - password
+                - password_confirmation
+      security: []
+  /api/auth/logout:
+    post:
+      summary: Logout
+      operationId: logout
+      description: 'Revoke the current API token.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Logged out successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Logged out successfully'
+        401:
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - Authentication
+  /api/auth/user:
+    get:
+      summary: 'Get current user'
+      operationId: getCurrentUser
+      description: "Get the currently authenticated user's details."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  user:
+                    id: 1
+                    name: 'John Doe'
+                    email: john@example.com
+                    is_admin: false
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john@example.com
+                      is_admin:
+                        type: boolean
+                        example: false
+        401:
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - Authentication
+  /api/levels/validate:
+    post:
+      summary: 'Validate level configuration'
+      operationId: validateLevelConfiguration
+      description: 'Validate a level configuration including grid dimensions, tile placement, and circuit reachability.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  valid: true
+                  errors: []
+                  warnings: []
+                  metadata:
+                    total_tiles: 25
+                    circuit_count: 3
+                    reachable_circuits: 3
+                    unreachable_circuits: []
+                properties:
+                  valid:
+                    type: boolean
+                    example: true
+                  errors:
+                    type: array
+                    example: []
+                  warnings:
+                    type: array
+                    example: []
+                  metadata:
+                    type: object
+                    properties:
+                      total_tiles:
+                        type: integer
+                        example: 25
+                      circuit_count:
+                        type: integer
+                        example: 3
+                      reachable_circuits:
+                        type: integer
+                        example: 3
+                      unreachable_circuits:
+                        type: array
+                        example: []
+        422:
+          description: 'Validation failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  valid: false
+                  errors:
+                    - 'Start position is outside grid boundaries'
+                  warnings:
+                    - 'Circuit at position 12 is unreachable'
+                  metadata:
+                    total_tiles: 25
+                    circuit_count: 3
+                    reachable_circuits: 2
+                    unreachable_circuits:
+                      - 12
+                properties:
+                  valid:
+                    type: boolean
+                    example: false
+                  errors:
+                    type: array
+                    example:
+                      - 'Start position is outside grid boundaries'
+                    items:
+                      type: string
+                  warnings:
+                    type: array
+                    example:
+                      - 'Circuit at position 12 is unreachable'
+                    items:
+                      type: string
+                  metadata:
+                    type: object
+                    properties:
+                      total_tiles:
+                        type: integer
+                        example: 25
+                      circuit_count:
+                        type: integer
+                        example: 3
+                      reachable_circuits:
+                        type: integer
+                        example: 2
+                      unreachable_circuits:
+                        type: array
+                        example:
+                          - 12
+                        items:
+                          type: integer
+      tags:
+        - 'Level Validation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tiles:
+                  type: array
+                  description: 'Array of tile objects.'
+                  example:
+                    -
+                      type: empty
+                    -
+                      type: circuit
+                    -
+                      type: obstacle
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: 'Tile type: empty, circuit, or obstacle.'
+                        example: empty
+                    required:
+                      - type
+                grid_width:
+                  type: integer
+                  description: 'Grid width (1-20).'
+                  example: 5
+                grid_height:
+                  type: integer
+                  description: 'Grid height (1-20).'
+                  example: 5
+                start_x:
+                  type: integer
+                  description: 'Player start X position.'
+                  example: 0
+                start_y:
+                  type: integer
+                  description: 'Player start Y position.'
+                  example: 0
+                required_circuits:
+                  type: integer
+                  description: 'Number of circuits required to complete.'
+                  example: 3
+              required:
+                - tiles
+                - grid_width
+                - grid_height
+                - start_x
+                - start_y
+                - required_circuits
+      security: []
+  /api/levels/reachability:
+    post:
+      summary: 'Check tile reachability'
+      operationId: checkTileReachability
+      description: 'Check which tiles are reachable from the start position and identify any unreachable circuits.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  reachable_count: 20
+                  reachable_indices:
+                    - 0
+                    - 1
+                    - 2
+                    - 3
+                    - 5
+                    - 6
+                    - 7
+                    - 10
+                    - 11
+                    - 12
+                  unreachable_circuits:
+                    - 8
+                    - 16
+                properties:
+                  reachable_count:
+                    type: integer
+                    example: 20
+                  reachable_indices:
+                    type: array
+                    example:
+                      - 0
+                      - 1
+                      - 2
+                      - 3
+                      - 5
+                      - 6
+                      - 7
+                      - 10
+                      - 11
+                      - 12
+                    items:
+                      type: integer
+                  unreachable_circuits:
+                    type: array
+                    example:
+                      - 8
+                      - 16
+                    items:
+                      type: integer
+      tags:
+        - 'Level Validation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tiles:
+                  type: array
+                  description: 'Array of tile objects.'
+                  example:
+                    -
+                      type: empty
+                    -
+                      type: circuit
+                    -
+                      type: obstacle
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: 'Tile type: empty, circuit, or obstacle.'
+                        example: empty
+                    required:
+                      - type
+                grid_width:
+                  type: integer
+                  description: 'Grid width (1-20).'
+                  example: 5
+                grid_height:
+                  type: integer
+                  description: 'Grid height (1-20).'
+                  example: 5
+                start_x:
+                  type: integer
+                  description: 'Start X position for reachability check.'
+                  example: 0
+                start_y:
+                  type: integer
+                  description: 'Start Y position for reachability check.'
+                  example: 0
+              required:
+                - tiles
+                - grid_width
+                - grid_height
+                - start_x
+                - start_y
+      security: []
+  /api/levels:
+    get:
+      summary: 'List all levels'
+      operationId: listAllLevels
+      description: "Get a paginated list of all public levels with optional search and filtering.\nIf a valid Sanctum token is provided, each level will include `played` and `score`\nfields indicating whether the authenticated player has completed the level."
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Search by name or description.'
+          example: tutorial
+          required: false
+          schema:
+            type: string
+            description: 'Search by name or description.'
+            example: tutorial
+        -
+          in: query
+          name: difficulty
+          description: 'Filter by difficulty (easy, medium, hard).'
+          example: easy
+          required: false
+          schema:
+            type: string
+            description: 'Filter by difficulty (easy, medium, hard).'
+            example: easy
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (default 15, max 100).'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (default 15, max 100).'
+            example: 15
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  levels:
+                    -
+                      id: 1
+                      name: Tutorial
+                      description: 'Learn the basics'
+                      difficulty: easy
+                      required_circuits: 3
+                      max_commands: 10
+                      grid_width: 5
+                      grid_height: 5
+                      played: true
+                      score:
+                        xp_earned: 25
+                        commands_used: 4
+                        completed_at: '2026-01-28T10:30:00.000000Z'
+                  pagination:
+                    current_page: 1
+                    last_page: 1
+                    per_page: 15
+                    total: 1
+                properties:
+                  levels:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        name: Tutorial
+                        description: 'Learn the basics'
+                        difficulty: easy
+                        required_circuits: 3
+                        max_commands: 10
+                        grid_width: 5
+                        grid_height: 5
+                        played: true
+                        score:
+                          xp_earned: 25
+                          commands_used: 4
+                          completed_at: '2026-01-28T10:30:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Tutorial
+                        description:
+                          type: string
+                          example: 'Learn the basics'
+                        difficulty:
+                          type: string
+                          example: easy
+                        required_circuits:
+                          type: integer
+                          example: 3
+                        max_commands:
+                          type: integer
+                          example: 10
+                        grid_width:
+                          type: integer
+                          example: 5
+                        grid_height:
+                          type: integer
+                          example: 5
+                        played:
+                          type: boolean
+                          example: true
+                        score:
+                          type: object
+                          properties:
+                            xp_earned:
+                              type: integer
+                              example: 25
+                            commands_used:
+                              type: integer
+                              example: 4
+                            completed_at:
+                              type: string
+                              example: '2026-01-28T10:30:00.000000Z'
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 15
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - Levels
+      security: []
+  '/api/levels/{level_id}':
+    get:
+      summary: 'Get level details'
+      operationId: getLevelDetails
+      description: 'Get full details of a specific level including the tile grid.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  level:
+                    id: 1
+                    name: Tutorial
+                    description: 'Learn the basics'
+                    difficulty: easy
+                    start_x: 0
+                    start_y: 0
+                    required_circuits: 3
+                    max_commands: 10
+                    grid_width: 5
+                    grid_height: 5
+                    tiles:
+                      -
+                        - 1
+                        - 1
+                        - 2
+                      -
+                        - 1
+                        - 3
+                        - 1
+                      -
+                        - 1
+                        - 1
+                        - 1
+                properties:
+                  level:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Tutorial
+                      description:
+                        type: string
+                        example: 'Learn the basics'
+                      difficulty:
+                        type: string
+                        example: easy
+                      start_x:
+                        type: integer
+                        example: 0
+                      start_y:
+                        type: integer
+                        example: 0
+                      required_circuits:
+                        type: integer
+                        example: 3
+                      max_commands:
+                        type: integer
+                        example: 10
+                      grid_width:
+                        type: integer
+                        example: 5
+                      grid_height:
+                        type: integer
+                        example: 5
+                      tiles:
+                        type: array
+                        example:
+                          -
+                            - 1
+                            - 1
+                            - 2
+                          -
+                            - 1
+                            - 3
+                            - 1
+                          -
+                            - 1
+                            - 1
+                            - 1
+                        items:
+                          type: array
+        404:
+          description: 'Level not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Level not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Level not found'
+      tags:
+        - Levels
+      security: []
+    parameters:
+      -
+        in: path
+        name: level_id
+        description: 'The ID of the level.'
+        example: 11
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: level
+        description: 'The level ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/levels/{level_id}/complete':
+    post:
+      summary: 'Complete a level'
+      operationId: completeALevel
+      description: "Submit commands to complete a level. The commands are simulated and if the player collects\nall required circuits, XP is awarded based on difficulty and efficiency."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Improved score'
+                    type: object
+                    example:
+                      message: 'New best score!'
+                      improved: true
+                      commands_used: 3
+                      xp_earned: 27
+                      xp_bonus: 2
+                      player_total_xp: 177
+                    properties:
+                      message:
+                        type: string
+                        example: 'New best score!'
+                      improved:
+                        type: boolean
+                        example: true
+                      commands_used:
+                        type: integer
+                        example: 3
+                      xp_earned:
+                        type: integer
+                        example: 27
+                      xp_bonus:
+                        type: integer
+                        example: 2
+                      player_total_xp:
+                        type: integer
+                        example: 177
+                  -
+                    description: 'Not improved'
+                    type: object
+                    example:
+                      message: 'Level completed, but not a new best score'
+                      improved: false
+                      commands_used: 5
+                      best_commands: 3
+                    properties:
+                      message:
+                        type: string
+                        example: 'Level completed, but not a new best score'
+                      improved:
+                        type: boolean
+                        example: false
+                      commands_used:
+                        type: integer
+                        example: 5
+                      best_commands:
+                        type: integer
+                        example: 3
+        201:
+          description: 'First completion'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Level completed!'
+                  first_completion: true
+                  commands_used: 4
+                  xp_earned: 25
+                  base_xp: 20
+                  efficiency_bonus: 5
+                  player_total_xp: 175
+                properties:
+                  message:
+                    type: string
+                    example: 'Level completed!'
+                  first_completion:
+                    type: boolean
+                    example: true
+                  commands_used:
+                    type: integer
+                    example: 4
+                  xp_earned:
+                    type: integer
+                    example: 25
+                  base_xp:
+                    type: integer
+                    example: 20
+                  efficiency_bonus:
+                    type: integer
+                    example: 5
+                  player_total_xp:
+                    type: integer
+                    example: 175
+        400:
+          description: 'No player profile'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Player profile required. Create a player first.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Player profile required. Create a player first.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Level not completed'
+                    type: object
+                    example:
+                      message: 'Level not completed'
+                      circuits_collected: 2
+                      circuits_required: 3
+                      commands_used: 10
+                    properties:
+                      message:
+                        type: string
+                        example: 'Level not completed'
+                      circuits_collected:
+                        type: integer
+                        example: 2
+                      circuits_required:
+                        type: integer
+                        example: 3
+                      commands_used:
+                        type: integer
+                        example: 10
+                  -
+                    description: 'Simulation failed'
+                    type: object
+                    example:
+                      message: 'Simulation failed'
+                      error: 'Invalid command: jump'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Simulation failed'
+                      error:
+                        type: string
+                        example: 'Invalid command: jump'
+      tags:
+        - Levels
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commands:
+                  type: array
+                  description: 'Array of commands to execute. Allowed: left, right, up, down, activate_circuit.'
+                  example:
+                    - right
+                    - right
+                    - down
+                    - activate_circuit
+                  items:
+                    type: string
+              required:
+                - commands
+    parameters:
+      -
+        in: path
+        name: level_id
+        description: 'The ID of the level.'
+        example: 11
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: level
+        description: 'The level ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/player:
+    get:
+      summary: 'Get player profile'
+      operationId: getPlayerProfile
+      description: "Get the authenticated user's player profile."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  player:
+                    id: 1
+                    nickname: CircuitMaster
+                    xp: 150
+                    created_at: '2024-01-15T10:30:00.000000Z'
+                    updated_at: '2024-01-15T10:30:00.000000Z'
+                properties:
+                  player:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nickname:
+                        type: string
+                        example: CircuitMaster
+                      xp:
+                        type: integer
+                        example: 150
+                      created_at:
+                        type: string
+                        example: '2024-01-15T10:30:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2024-01-15T10:30:00.000000Z'
+        404:
+          description: 'Player not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Player not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Player not found'
+      tags:
+        - Player
+    post:
+      summary: 'Create player profile'
+      operationId: createPlayerProfile
+      description: 'Create a new player profile for the authenticated user. Each user can only have one player.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Player created successfully'
+                  player:
+                    id: 1
+                    nickname: CircuitMaster
+                    xp: 0
+                    created_at: '2024-01-15T10:30:00.000000Z'
+                    updated_at: '2024-01-15T10:30:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Player created successfully'
+                  player:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nickname:
+                        type: string
+                        example: CircuitMaster
+                      xp:
+                        type: integer
+                        example: 0
+                      created_at:
+                        type: string
+                        example: '2024-01-15T10:30:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2024-01-15T10:30:00.000000Z'
+        409:
+          description: 'Player already exists'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Player already exists'
+                properties:
+                  message:
+                    type: string
+                    example: 'Player already exists'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The nickname has already been taken.'
+                  errors:
+                    nickname:
+                      - 'The nickname has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The nickname has already been taken.'
+                  errors:
+                    type: object
+                    properties:
+                      nickname:
+                        type: array
+                        example:
+                          - 'The nickname has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Player
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: "The player's nickname (unique, 3-20 characters)."
+                  example: CircuitMaster
+              required:
+                - nickname
+    delete:
+      summary: 'Delete player profile'
+      operationId: deletePlayerProfile
+      description: "Delete the authenticated user's player profile. This will also delete all associated scores."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Player deleted successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Player deleted successfully'
+        404:
+          description: 'Player not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Player not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Player not found'
+      tags:
+        - Player
+  /api/player/progress:
+    get:
+      summary: 'Get player progress'
+      operationId: getPlayerProgress
+      description: "Get the player's progress including all completed levels and scores."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  player:
+                    nickname: CircuitMaster
+                    total_xp: 150
+                    levels_completed: 3
+                  scores:
+                    -
+                      level_id: 1
+                      level_name: Tutorial
+                      difficulty: easy
+                      xp_earned: 25
+                      commands_used: 8
+                      completed_at: '2024-01-15T10:30:00.000000Z'
+                properties:
+                  player:
+                    type: object
+                    properties:
+                      nickname:
+                        type: string
+                        example: CircuitMaster
+                      total_xp:
+                        type: integer
+                        example: 150
+                      levels_completed:
+                        type: integer
+                        example: 3
+                  scores:
+                    type: array
+                    example:
+                      -
+                        level_id: 1
+                        level_name: Tutorial
+                        difficulty: easy
+                        xp_earned: 25
+                        commands_used: 8
+                        completed_at: '2024-01-15T10:30:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        level_id:
+                          type: integer
+                          example: 1
+                        level_name:
+                          type: string
+                          example: Tutorial
+                        difficulty:
+                          type: string
+                          example: easy
+                        xp_earned:
+                          type: integer
+                          example: 25
+                        commands_used:
+                          type: integer
+                          example: 8
+                        completed_at:
+                          type: string
+                          example: '2024-01-15T10:30:00.000000Z'
+        404:
+          description: 'Player not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Player not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Player not found'
+      tags:
+        - Player
+  /api/tiles:
+    get:
+      summary: 'List all tile types'
+      operationId: listAllTileTypes
+      description: 'Get all available tile types with their images for rendering the level grid.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  tiles:
+                    -
+                      id: 1
+                      type: floor
+                      image: floor.png
+                      media_url: 'https://example.com/storage/tiles/floor.png'
+                    -
+                      id: 2
+                      type: wall
+                      image: wall.png
+                      media_url: 'https://example.com/storage/tiles/wall.png'
+                    -
+                      id: 3
+                      type: circuit
+                      image: circuit.png
+                      media_url: 'https://example.com/storage/tiles/circuit.png'
+                properties:
+                  tiles:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        type: floor
+                        image: floor.png
+                        media_url: 'https://example.com/storage/tiles/floor.png'
+                      -
+                        id: 2
+                        type: wall
+                        image: wall.png
+                        media_url: 'https://example.com/storage/tiles/wall.png'
+                      -
+                        id: 3
+                        type: circuit
+                        image: circuit.png
+                        media_url: 'https://example.com/storage/tiles/circuit.png'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        type:
+                          type: string
+                          example: floor
+                        image:
+                          type: string
+                          example: floor.png
+                        media_url:
+                          type: string
+                          example: 'https://example.com/storage/tiles/floor.png'
+      tags:
+        - Tiles
+      security: []
+  /api/trivia:
+    get:
+      summary: 'Get a trivia question'
+      operationId: getATriviaQuestion
+      description: 'Fetch a random true/false programming trivia question from Open Trivia DB.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  question: 'The NVidia GTX 1080 gets its name because it can only render at a 1920x1080 screen resolution.'
+                  difficulty: easy
+                  correct_answer: 'False'
+                  answers:
+                    - 'True'
+                    - 'False'
+                properties:
+                  question:
+                    type: string
+                    example: 'The NVidia GTX 1080 gets its name because it can only render at a 1920x1080 screen resolution.'
+                  difficulty:
+                    type: string
+                    example: easy
+                  correct_answer:
+                    type: string
+                    example: 'False'
+                  answers:
+                    type: array
+                    example:
+                      - 'True'
+                      - 'False'
+                    items:
+                      type: string
+      tags:
+        - Trivia
+      security: []
