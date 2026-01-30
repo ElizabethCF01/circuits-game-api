@@ -49,16 +49,6 @@ class LevelTable extends Component
         }
     }
 
-    public function deleteLevel(int $id): void
-    {
-        $level = Level::find($id);
-
-        if ($level) {
-            $level->delete();
-            session()->flash('message', 'Level deleted.');
-        }
-    }
-
     public function render()
     {
         $query = Level::with('user');

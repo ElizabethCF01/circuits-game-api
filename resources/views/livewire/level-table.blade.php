@@ -99,14 +99,6 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('admin.levels.show', $level) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
                                 <a href="{{ route('admin.levels.edit', $level) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                <button
-                                    type="button"
-                                    wire:click="deleteLevel({{ $level->id }})"
-                                    wire:confirm="Are you sure you want to delete this level?"
-                                    class="text-red-600 hover:text-red-900"
-                                >
-                                    Delete
-                                </button>
                             </td>
                         </tr>
                     @endforeach
